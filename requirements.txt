@@ -2,4 +2,4 @@ numpy
 pandas
 plotly
 streamlit
-
+pycountry_convert
