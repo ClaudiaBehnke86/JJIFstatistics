@@ -249,7 +249,7 @@ if checkfile:
     #   ds.add_flag_frames_are_loaded()
     # else
     #    frames = ds.frames
-    frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
+frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
 
 
 if len(frames) == 0:
