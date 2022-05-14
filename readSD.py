@@ -1,5 +1,5 @@
 '''
-Read in data (json) and display statsitc on JJIF
+Read in data (json) and display statstic on JJIF
 '''
 
 import json
@@ -79,6 +79,8 @@ def read_in_catkey():
 def data_setting():
     ''' The sidebar elements for the selection
     '''
+    mode = st.sidebar.selectbox('Please select your mode',
+                               ('History', 'Single Event', 'Countries'))
     dstart = st.sidebar.date_input("From", dt.date(2010, 1, 1))
     dend = st.sidebar.date_input("To", dt.date.today())
 
@@ -95,7 +97,7 @@ def data_setting():
                                          EVENT_TYPE,
                                          EVENT_INP)
 
-    return age_select, dis_select, cont_select, dstart, dend, evtt_select
+    return age_select, dis_select, cont_select, dstart, dend, evtt_select, mode
 
 
 def get_events(dstart, dend, evtt_select, user, password):
@@ -152,6 +154,14 @@ def get_events(dstart, dend, evtt_select, user, password):
               'name': 'Pan American Championship 2016',
               'eventtype': 'Continental Championship',
               'startDate': '2016-08-26'},
+             # {'id': 'Go2016', 'country_code': 'GER',
+             # 'name': 'German Open 2016',
+             # 'eventtype': 'A Class Tournament',
+             # 'startDate': '2016-09-24'},
+              {'id': 'BO2016', 'country_code': 'GER',
+              'name': 'Balkan Open 2016',
+              'eventtype': 'A Class Tournament',
+              'startDate': '2016-09-16'}
                 ]
     df2 = df2.append(df_wg, ignore_index = True)            
 
@@ -234,7 +244,7 @@ def conv_to_type(df, type_name, type_list):
 
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
-age_select, dis_select, cont_select, dstart, dend, evtt = data_setting()
+age_select, dis_select, cont_select, dstart, dend, evtt, mode = data_setting()
 
 checkfile = st.checkbox("Get new data", value=True)
 if checkfile:
@@ -305,13 +315,6 @@ else:
     df_ini = df_ini[df_ini['cat_type'].isin(dis_select)]
     df_ini = df_ini[df_ini['age_division'].isin(age_select)]
     df_ini = df_ini[df_ini['continent'].isin(cont_select)]
-
-    with st.expander("Hide/include indivudual countries"):
-        country_sel = df_ini['country'].unique().tolist()
-        countryt_select = st.multiselect('Select the country',
-                                         country_sel,
-                                         country_sel)
-        df_ini = df_ini[df_ini['country'].isin(countryt_select)]
 
 
     df_par = df_ini.copy()
@@ -402,82 +405,95 @@ else:
 
     st.header('JJIF statistic')
 
+    if mode == 'History':
 
-    df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
-    fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
-                  color_discrete_map=COLOR_MAP)
-    fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
-    st.plotly_chart(fig1)
-
-    df_timeev_jjnos = df_time[['dates', 'country', 'continent']].groupby(['dates', 'continent']).nunique().reset_index()
-    fig0 = px.area(df_timeev_jjnos, x='dates', y='country', color='continent', title="Time evolution of JJIF - JJNOs",
-                  color_discrete_map=COLOR_MAP_CON)
-    fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
-    st.plotly_chart(fig0)
-
-
-  #  df_cats = df_total[['name','category_name','age_division','cat_type','continent']].groupby(['cat_type','age_division','continent']).count().reset_index()
-  
-   # fig_cats = px.bar(df_cats, x="category_name", y="count", color="medal", title="Long-Form Input")
-   # fig_cats.show()
-
-
-    left_column, right_column = st.columns(2)
-    with left_column:
-        df_cat = pd.DataFrame()
-        df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
-        df_cat['counts'] = df_ini['cat_type'].value_counts().values
-        fig1 = px.pie(df_cat, values='counts',
-                      names='cat_type', color='cat_type',
-                      title='Discipline distribution',
+        df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
+        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
                       color_discrete_map=COLOR_MAP)
-        fig1.update_layout(legend=dict(
-                           yanchor="top",
-                           y=0.99,
-                           xanchor="left",
-                           x=0.01))
-        st.plotly_chart(fig1,use_container_width=True)
+        fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig1)
 
-    with right_column:
-    	df_gender = pd.DataFrame()
-    	df_gender['gender'] = df_total['gender'].value_counts().index
-    	df_gender['counts'] = df_total['gender'].value_counts().values	
-    	fig2 = px.pie(df_gender, values='counts', names='gender', color='gender',
-                      color_discrete_map={"Women": 'rgb(243, 28, 43)',
-                                          "Men": 'rgb(0,144,206)',
-                                          "Mixed": 'rgb(211,211,211)'},
-                      title='Gender distribution')
-    	st.plotly_chart(fig2,use_container_width=True)
+        df_timeev_jjnos = df_time[['dates', 'country', 'continent']].groupby(['dates', 'continent']).nunique().reset_index()
+        fig0 = px.area(df_timeev_jjnos, x='dates', y='country', color='continent', title="Time evolution of JJIF - JJNOs",
+                      color_discrete_map=COLOR_MAP_CON)
+        fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig0)
 
-    df_map = pd.DataFrame()
-    df_map['country'] = df_total['country_code'].value_counts().index
-    df_map['counts'] = df_total['country_code'].value_counts().values
-    data = dict(type='choropleth', 
-                locations=df_map['country'], 
-                z=df_map['counts'])
 
-    layout = dict(title='Participating JJNOs', 
-                  geo=dict(showframe=True,
-                           projection={'type':'robinson'}))
-    x = pg.Figure(data=[data], layout=layout)
-    st.plotly_chart(x)
+        df_cats = df_total[['name','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).count().reset_index()
+      
+        fig_cats = px.bar(df_cats, x="category_name", y="name", color="continent", title="Athletes per category", color_discrete_map=COLOR_MAP_CON)
+        st.plotly_chart(fig_cats)
 
 
 
-    df_age_dis = df_total[['name','age_division','cat_type','continent']].groupby(['cat_type','age_division','continent']).count().reset_index()
-    fig3 = px.bar(df_age_dis, x="age_division", y= "name",
-                  color="cat_type", color_discrete_map=COLOR_MAP,
-                  text='name',hover_data=["continent"],
-                  title="age_division and disciplines")
-    st.plotly_chart(fig3)
+        left_column, right_column = st.columns(2)
+        with left_column:
+            df_cat = pd.DataFrame()
+            df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
+            df_cat['counts'] = df_ini['cat_type'].value_counts().values
+            fig1 = px.pie(df_cat, values='counts',
+                          names='cat_type', color='cat_type',
+                          title='Discipline distribution',
+                          color_discrete_map=COLOR_MAP)
+            fig1.update_layout(legend=dict(
+                               yanchor="top",
+                               y=0.99,
+                               xanchor="left",
+                               x=0.01))
+            st.plotly_chart(fig1,use_container_width=True)
 
-    # for individual events
-    df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
-    df_evts_plot = df_evts_plot.join(df_evts[['id','startDate']].set_index('id'), on='id')
-    fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type", color_discrete_map=COLOR_MAP, line_group="age_division")
-    st.plotly_chart(fig3)
+        with right_column:
+        	df_gender = pd.DataFrame()
+        	df_gender['gender'] = df_total['gender'].value_counts().index
+        	df_gender['counts'] = df_total['gender'].value_counts().values	
+        	fig2 = px.pie(df_gender, values='counts', names='gender', color='gender',
+                          color_discrete_map={"Women": 'rgb(243, 28, 43)',
+                                              "Men": 'rgb(0,144,206)',
+                                              "Mixed": 'rgb(211,211,211)'},
+                          title='Gender distribution')
+        	st.plotly_chart(fig2,use_container_width=True)
 
-    df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
-    fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
-    fig4.update_xaxes(categoryorder='total descending')
-    st.plotly_chart(fig4)
+        df_map = pd.DataFrame()
+        df_map['country'] = df_total['country_code'].value_counts().index
+        df_map['counts'] = df_total['country_code'].value_counts().values
+        data = dict(type='choropleth', 
+                    locations=df_map['country'], 
+                    z=df_map['counts'])
+
+        layout = dict(title='Participating JJNOs', 
+                      geo=dict(showframe=True,
+                               projection={'type':'robinson'}))
+        x = pg.Figure(data=[data], layout=layout)
+        st.plotly_chart(x)
+
+
+
+        df_age_dis = df_total[['name','age_division','cat_type','continent']].groupby(['cat_type','age_division','continent']).count().reset_index()
+        fig3 = px.bar(df_age_dis, x="age_division", y= "name",
+                      color="cat_type", color_discrete_map=COLOR_MAP,
+                      text='name',hover_data=["continent"],
+                      title="age_division and disciplines")
+        st.plotly_chart(fig3)
+
+    elif mode =='Single Event': 
+
+        # for individual events
+        df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
+        df_evts_plot = df_evts_plot.join(df_evts[['id','startDate']].set_index('id'), on='id')
+        fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type", color_discrete_map=COLOR_MAP, line_group="age_division")
+        st.plotly_chart(fig3)
+
+        df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
+        fig4.update_xaxes(categoryorder='total descending')
+        st.plotly_chart(fig4)
+
+    else:
+
+        with st.expander("Hide/include indivudual countries"):
+            country_sel = df_ini['country'].unique().tolist()
+            countryt_select = st.multiselect('Select the country',
+                                             country_sel,
+                                             country_sel)
+            df_ini = df_ini[df_ini['country'].isin(countryt_select)]
