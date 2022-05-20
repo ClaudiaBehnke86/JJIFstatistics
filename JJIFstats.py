@@ -22,7 +22,7 @@ AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15"]
 AGE_SEL = ["U16", "U18", "U21", "Adults"]  # preselected age_divisions
 
 # the supportes disciplines
-DIS_INP = ["Duo", "Show", "Jiu-Jitsu", "Fighting", "Contact", "Para"]
+DIS_INP = ["Duo", "Show", "Jiu-Jitsu", "Fighting", "Contact"]
 DIS_SEL = ["Duo", "Show", "Jiu-Jitsu", "Fighting", "Contact"]  # presel discip
 
 # continents
@@ -90,6 +90,8 @@ def data_setting():
     dis_select = st.sidebar.multiselect('Select the disciplines',
                                         DIS_INP,
                                         DIS_SEL)
+    para_in = st.sidebar.selectbox('Para setting',
+                                   ('Include','Exclude','Only'), help='Include = Inlude Para in statistc, Exclude = Exclude Para in statistc , Only = Shows only Para disciplines')
     cont_select = st.sidebar.multiselect('Select the continent',
                                          CONT_INP,
                                          CONT_INP)
@@ -97,7 +99,7 @@ def data_setting():
                                          EVENT_TYPE,
                                          EVENT_INP)
 
-    return age_select, dis_select, cont_select, dstart, dend, evtt_select, mode
+    return age_select, dis_select, cont_select, dstart, dend, evtt_select, mode, para_in
 
 
 def get_events(dstart, dend, evtt_select, user, password):
@@ -260,7 +262,7 @@ def conv_to_type(df, type_name, type_list):
 
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
-age_select, dis_select, cont_select, dstart, dend, evtt, mode = data_setting()
+age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_in = data_setting()
 
 checkfile = st.checkbox("Get new data", value=True)
 if checkfile:
@@ -331,8 +333,12 @@ else:
     df_ini = df_ini[df_ini['cat_type'].isin(dis_select)]
     df_ini = df_ini[df_ini['age_division'].isin(age_select)]
     df_ini = df_ini[df_ini['continent'].isin(cont_select)]
-
-
+    if para_in =='Exclude':
+         df_ini = df_ini[~df_ini['category_name'].str.contains("Para")]
+    elif para_in =='Only':
+         df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
+    else:
+        print("Include Para")
     df_par = df_ini.copy()
     df_par = df_par.join(df_evts[['id','startDate']].set_index('id'), on='id') 
     df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
@@ -421,8 +427,7 @@ else:
 
     st.header('JJIF statistic')
 
-    if mode == 'History':
-
+    if mode =='History': 
         df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
         fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
                       color_discrete_map=COLOR_MAP)
