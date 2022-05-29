@@ -573,13 +573,15 @@ else:
         st.plotly_chart(fig0)
 
 
-        df_total = df_total[df_total['leavingDate'] < pd.Timestamp(datetime.now())]
+        current_cat = st.checkbox('Show only currently active athletes', value=True)
+        if current_cat: 
+            df_total = df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]
+
         df_cats = df_total[['name','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).count().reset_index()
         
         fig_cats = px.bar(df_cats, x="category_name", y="name", color="continent", title="Athletes per category", color_discrete_map=COLOR_MAP_CON)
+        fig_cats.update_layout(xaxis={'categoryorder':'category ascending'})
         st.plotly_chart(fig_cats)
-
-
 
         left_column, right_column = st.columns(2)
         with left_column:
@@ -637,6 +639,8 @@ else:
         df_evts_plot = df_evts_plot.join(df_evts[['id','startDate']].set_index('id'), on='id')
         fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type", color_discrete_map=COLOR_MAP, line_group="age_division")
         st.plotly_chart(fig3)
+
+        
 
         df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
