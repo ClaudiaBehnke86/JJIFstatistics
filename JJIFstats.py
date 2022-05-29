@@ -24,6 +24,8 @@ from scipy.sparse import csr_matrix
 import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
 import time
 
+from datastore import DataStore
+
 # the supported age_divisions
 AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15"]
 AGE_SEL = ["U16", "U18", "U21", "Adults"]  # preselected age_divisions
@@ -240,7 +242,9 @@ def FileCheck(numb, user, password, user1, password1, data_url):
     sportdata or from the local database
 
     '''
-
+    # TODO:
+    # build cache and check if dict is already in cache
+    # dict is defined by numb (unique identifier)
     db_string = "curl -u " + user1+":"+password1+" "+data_url+numb+".json > "+numb+".json"
     os.system(db_string)
     d = {}
@@ -330,6 +334,11 @@ def get_matches_df(sparse_matrix, name_vector, top=100):
                           'right_side': right_side,
                            'similairity': similairity})
 
+
+
+ds = DataStore()
+
+print(ds)
 
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
