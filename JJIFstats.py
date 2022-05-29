@@ -421,13 +421,13 @@ else:
             else:
                 matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 4, 0.4) 
             # store the  matches into new dataframe called matched_df
-            matches_df = get_matches_df(matches, names_types, top=100)
+            matches_df = get_matches_df(matches, names_types, top=200)
             # For removing all exact matches
             matches_df = matches_df[matches_df['similarity'] < 0.99999]
             # create a mapping between names in form of a dict
             matches_df = matches_df[matches_df['similarity'] > similarity]
             dict_map = dict(zip(matches_df.left_side, matches_df.right_side))
-            df_new['name'].replace(dict_map, inplace=True)
+            df_new['name'].replace(dict_map, regex=True, inplace=True)
             list_df_new.append(df_new)
             if len(dict_map) > 0:
                 print('fixing ' + str(len(dict_map)) + ' issues with names')
