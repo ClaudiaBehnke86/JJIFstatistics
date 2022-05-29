@@ -17,13 +17,13 @@ import plotly.graph_objs as pg
 import numpy as np
 import os
 
-
+#to check for similar names:
 import re
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import csr_matrix
 import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
-import time
 
+# to build the singelton
 from datastore import DataStore
 
 # the supported age_divisions
@@ -286,23 +286,24 @@ def conv_to_type(df, type_name, type_list):
 
 
 def ngrams(string, n=3):
-    ''' used to check for simkliar names'''
+    ''' used to check for simliar names'''
     string = re.sub(r'[,-./]|\sBD',r'', string)
     ngrams = zip(*[string[i:] for i in range(n)])
     return [''.join(ngram) for ngram in ngrams]
 
+
 def awesome_cossim_top(A, B, ntop, lower_bound=0):
-    # force A and B as a CSR matrix.
-    # If they have already been CSR, there is no overhead
+    ''' force A and B as a CSR matrix.
+     If they have already been CSR, there is no overhead'''
     A = A.tocsr()
     B = B.tocsr()
     M, _ = A.shape
     _, N = B.shape
- 
+
     idx_dtype = np.int32
- 
+
     nnz_max = M*ntop
- 
+
     indptr = np.zeros(M+1, dtype=idx_dtype)
     indices = np.zeros(nnz_max, dtype=idx_dtype)
     data = np.zeros(nnz_max, dtype=A.dtype)
@@ -316,58 +317,45 @@ def awesome_cossim_top(A, B, ntop, lower_bound=0):
         ntop,
         lower_bound,
         indptr, indices, data)
-    return csr_matrix((data,indices,indptr),shape=(M,N))    
+    return csr_matrix((data, indices, indptr),shape=(M,N))
 
-# unpacks the resulting sparse matrix
+
 def get_matches_df(sparse_matrix, name_vector, top=100):
+    '''unpacks the resulting sparse matrix'''
     non_zeros = sparse_matrix.nonzero()
-    
+
     sparserows = non_zeros[0]
     sparsecols = non_zeros[1]
-    
-    if top:
+
+    if sparsecols.size > top:
         nr_matches = top
     else:
         nr_matches = sparsecols.size
-    
+
     left_side = np.empty([nr_matches], dtype=object)
     right_side = np.empty([nr_matches], dtype=object)
-    similairity = np.zeros(nr_matches)
-    
+    similarity = np.zeros(nr_matches)
+
     for index in range(0, nr_matches):
         left_side[index] = name_vector[sparserows[index]]
         right_side[index] = name_vector[sparsecols[index]]
-        similairity[index] = sparse_matrix.data[index]
-    
+        similarity[index] = sparse_matrix.data[index]
+
     return pd.DataFrame({'left_side': left_side,
-                          'right_side': right_side,
-                           'similairity': similairity})
+                        'right_side': right_side,
+                        'similarity': similarity})
 
+# Main programm starts here
 
-
+#create data store
 ds = DataStore()
-
-print(ds)
 
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
 age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_in = data_setting()
 
-checkfile = st.checkbox("Get new data", value=True)
-if checkfile:
-    df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
-    # create a datastore
-    # SINGLETON (design pattern)
-    # ds = DataStore()
-    # test if frames are already in datastore
-    # if not ds.are_frame_already_loaded():
-    #   frames = update_events ...
-    #   ds.add_frames(frames)
-    #   ds.add_flag_frames_are_loaded()
-    # else
-    #    frames = ds.frames
+df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
 frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
-
 
 if len(frames) == 0:
     st.write("please select at least one item in each category")
@@ -376,6 +364,7 @@ else:
     df_ini = pd.concat(frames)
     df_ini['name'] = df_ini['name'].apply(lambda x: x.upper())
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
+    df_ini['name'].replace("  ", " ", regex=True, inplace=True)
     # remove different characters in names
     df_ini['name'].replace("-", "/", regex=True, inplace=True)
     df_ini['name'].replace(" / ", "/", regex=True, inplace=True)
@@ -383,17 +372,69 @@ else:
     df_ini['name'].replace("/ ", "/", regex=True, inplace=True)
     df_ini['name'].replace("Ö", "OE", regex=True, inplace=True)
     df_ini['name'].replace("Ä", "AE", regex=True, inplace=True)
+    df_ini['name'].replace("Ü", "UE", regex=True, inplace=True)
     df_ini['name'].replace("Ć", "C", regex=True, inplace=True)
+    df_ini['name'].replace("Š", "S", regex=True, inplace=True)
+    df_ini['name'].replace("Ó", "O", regex=True, inplace=True)
+    df_ini['name'].replace("Á", "A", regex=True, inplace=True)
+    df_ini['name'].replace("Ñ", "A", regex=True, inplace=True)
+    df_ini['name'].replace("Ï", "A", regex=True, inplace=True)
+    df_ini['name'].replace("Í", "I", regex=True, inplace=True)
+    df_ini['name'].replace("É", "E", regex=True, inplace=True)
+    df_ini['name'].replace("Ő", "O", regex=True, inplace=True)
+    df_ini['name'].replace("Č", "C", regex=True, inplace=True)
+    df_ini['name'].replace("Ń", "N", regex=True, inplace=True)
     df_ini['name'].replace(",", " ", regex=True, inplace=True)
+    df_ini['name'].replace("  ", " ", regex=True, inplace=True)
     df_ini['rank'] = df_ini['rank'].astype(int)
     df_ini['category_id'] = df_ini['category_id'].astype(int)
+
     # remove all categories which are not in key map and convert to hr name
-    with st.expander("Show unsupported categories"):
+    with st.expander("Show unsupported categories", expanded=False):
         st.write(df_ini[~df_ini['category_id'].isin(key_map.keys())])
     df_ini = df_ini[df_ini['category_id'].isin(key_map.keys())]
     df_ini['category_name'] = df_ini['category_id'].replace(key_map)
 
-    # replace wrong country codes and make all ISO 
+    # merge similar names
+    cat_list = df_ini['category_name'].unique().tolist()
+    # loop over all catergories
+    vectorizer = TfidfVectorizer(min_df=1, analyzer=ngrams)
+
+    with st.expander('Details on name matching', expanded=False):
+        st.write('Similar names were matched to aviod double courning. This is based on:')
+        st.write('https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e')
+        similarity = st.number_input('similarity', min_value=0.4, 
+                                     max_value=0.9, value=0.6,
+                                     help="small number means more matches, high number only exact matches"
+                                     )
+    # create empty temporary list for events to fix names
+    list_df_new = []
+    
+    for i in range(len(cat_list)):
+        df_new = df_ini[df_ini['category_name'].str.contains(str(cat_list[i])) == True]
+        # re-index the names column to continuous index starting at
+        names_types = pd.Series(df_new['name'].values)
+        if len(names_types) > 1:
+            tf_idf_matrix = vectorizer.fit_transform(names_types)
+            if len(names_types) > 4: 
+                matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 10, 0.4)
+            else:
+                matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 4, 0.4) 
+            # store the  matches into new dataframe called matched_df
+            matches_df = get_matches_df(matches, names_types, top=100)
+            # For removing all exact matches
+            matches_df = matches_df[matches_df['similarity'] < 0.99999]
+            # create a mapping between names in form of a dict
+            matches_df = matches_df[matches_df['similarity'] > similarity]
+            dict_map = dict(zip(matches_df.left_side, matches_df.right_side))
+            df_new['name'].replace(dict_map, inplace=True)
+            list_df_new.append(df_new)
+            if len(dict_map) > 0:
+                print('fixing ' + str(len(dict_map)) + ' issues with names')
+
+    # overwrite existing df_ini with events with name issues fixed
+    df_ini = pd.concat(list_df_new)
+    # replace wrong country codes and make all ISO
     df_ini["country_code"].replace("RJF", "RUS", regex=True, inplace=True)
     df_ini["country_code"].replace("JIF", "LIE", regex=True, inplace=True)
     df_ini["country_code"].replace("ENG", "GBR", regex=True, inplace=True)
@@ -423,11 +464,12 @@ else:
     df_ini = df_ini[df_ini['age_division'].isin(age_select)]
     df_ini = df_ini[df_ini['continent'].isin(cont_select)]
     if para_in =='Exclude':
-         df_ini = df_ini[~df_ini['category_name'].str.contains("Para")]
+        df_ini = df_ini[~df_ini['category_name'].str.contains("Para")]
     elif para_in =='Only':
-         df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
+        df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
     else:
         print("Include Para")
+
     df_par = df_ini.copy()
     df_par = df_par.join(df_evts[['id','startDate']].set_index('id'), on='id') 
     df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
@@ -436,7 +478,7 @@ else:
     df_max.rename(columns={"startDate": "leavingDate"}, inplace=True)
     df_max['leavingDate'] = df_max['leavingDate'] + pd.offsets.DateOffset(years=2)
     df_total = pd.merge(df_min, df_max)
-
+    st.write("in total ", len(df_total), "athletes")
 
     df_total['long_id'] = df_total['country'] + "_" + df_total['name'] + "_" + df_total['category_name']
     df_total['gender'] = df_total['category_name']
@@ -464,6 +506,8 @@ else:
     df_total['age_division'] = df_total['category_name']
     df_total['age_division'] = conv_to_type(df_total, 'age_division', AGE_INP)
 
+
+    #merge the entires to a time range
     df_crosstab = (
        pd.crosstab(
         index=df_total['long_id'],
@@ -492,8 +536,6 @@ else:
 
     df_time['temp_id'] = df_time['long_id'].str.split("_")
     df_time['country'] = df_time['temp_id'].apply(lambda x: x[0])
-
-
     df_time['name'] = df_time['temp_id'].apply(lambda x: x[1])
     df_time['category_name'] = df_time['temp_id'].apply(lambda x: x[2])
     df_time.drop('temp_id', inplace=True, axis=1)
@@ -512,23 +554,8 @@ else:
                           other="Pan America", inplace=True)
     df_time['continent'].where(~(df_time['continent'].str.contains("North America")),
                           other="Pan America", inplace=True)
+
     # start grapics here
-
-    # names_types = df_time['name']
-    # vectorizer = TfidfVectorizer(min_df=1, analyzer=ngrams)
-    # tf_idf_matrix = vectorizer.fit_transform(names_types) 
-    
-    # st.write(tf_idf_matrix[0])
-    # matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 10, 0.8)
-
-
-    # # store the  matches into new dataframe called matched_df and 
-    # # printing 10 samples
-    # matches_df = get_matches_df(matches, df_time['name'], top=200)
-    # matches_df = matches_df[matches_df['similairity'] < 0.99999] # For removing all exact matches
-    # matches_df.sample(10)
-    # # printing the matches in sorted order
-    # matches_df.sort_values(['similairity'], ascending=False).head(10)
 
     st.header('JJIF statistic')
 
@@ -546,8 +573,9 @@ else:
         st.plotly_chart(fig0)
 
 
+        df_total = df_total[df_total['leavingDate'] < pd.Timestamp(datetime.now())]
         df_cats = df_total[['name','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).count().reset_index()
-      
+        
         fig_cats = px.bar(df_cats, x="category_name", y="name", color="continent", title="Athletes per category", color_discrete_map=COLOR_MAP_CON)
         st.plotly_chart(fig_cats)
 
