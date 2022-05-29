@@ -4,3 +4,5 @@ plotly
 streamlit
 sklearn
 pycountry_convert
+scipy
+sparse_dot_topn
