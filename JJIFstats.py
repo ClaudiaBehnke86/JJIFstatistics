@@ -221,18 +221,27 @@ def update_events(df_evts, age_select, dis_select, cont_select, evtt):
         events = df_evts['id'].tolist()
 
         my_bar = st.progress(0)
-  
+ 
+	# event loop
         with st.spinner('Recalculate events'):
             for i, val in enumerate(events):
-                d = FileCheck(val, st.secrets['user'], st.secrets['password'], st.secrets['user1'],
-                     st.secrets['password1'], st.secrets['url'])
-                if len(d) > 0:
-                    df_file = json_normalize(d['results'])
-                    df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
-                    df_file['id'] = val
-                    frames.append(df_file)
+                if ds.check_cache(val):
+                    df_file = ds.get_data(val)
+                    if len(df_file) > 0:
+                        frames.append(df_file)
+                else:
+                     d = FileCheck(val, st.secrets['user'], st.secrets['password'], st.secrets['user1'],
+                         st.secrets['password1'], st.secrets['url'])
+                     if len(d) > 0:
+                         df_file = json_normalize(d['results'])
+                         df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
+                         df_file['id'] = val
+                         # add event dataframe to general data
+                         ds.set_data(val, df_file) 
+                         frames.append(df_file)
+                     else:
+                         ds.set_data(val, pd.DataFrame())
                 my_bar.progress((i+1)/len(events))
-
     return frames
 
 
