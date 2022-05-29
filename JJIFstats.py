@@ -427,7 +427,7 @@ else:
             # create a mapping between names in form of a dict
             matches_df = matches_df[matches_df['similarity'] > similarity]
             dict_map = dict(zip(matches_df.left_side, matches_df.right_side))
-            df_new['name'].replace(dict_map, inplace=True).copy()
+            df_new['name'].replace(dict_map, inplace=True)
             list_df_new.append(df_new)
             if len(dict_map) > 0:
                 print('fixing ' + str(len(dict_map)) + ' issues with names')
@@ -640,7 +640,7 @@ else:
         fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type", color_discrete_map=COLOR_MAP, line_group="age_division")
         st.plotly_chart(fig3)
 
-        
+
 
         df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
