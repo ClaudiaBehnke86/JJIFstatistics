@@ -427,7 +427,7 @@ else:
             # create a mapping between names in form of a dict
             matches_df = matches_df[matches_df['similarity'] > similarity]
             dict_map = dict(zip(matches_df.left_side, matches_df.right_side))
-            df_new.loc[:, 'name'] = df_new['name'].replace(dict_map).copy(deep=True)
+            df_new.loc[:, 'name'] = df_new['name'].replace(dict_map)
             list_df_new.append(df_new)
             if len(dict_map) > 0:
                 print('fixing ' + str(len(dict_map)) + ' issues with names')
