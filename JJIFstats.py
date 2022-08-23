@@ -85,6 +85,7 @@ def read_in_catkey():
     return key_map
 
 
+
 def data_setting():
     ''' The sidebar elements for the selection
     '''
@@ -230,17 +231,17 @@ def update_events(df_evts, age_select, dis_select, cont_select, evtt):
                     if len(df_file) > 0:
                         frames.append(df_file)
                 else:
-                     d = FileCheck(val, st.secrets['user'], st.secrets['password'], st.secrets['user1'],
-                         st.secrets['password1'], st.secrets['url'])
-                     if len(d) > 0:
-                         df_file = json_normalize(d['results'])
-                         df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
-                         df_file['id'] = val
-                         # add event dataframe to general data
-                         ds.set_data(val, df_file) 
-                         frames.append(df_file)
-                     else:
-                         ds.set_data(val, pd.DataFrame())
+                    d = FileCheck(val, st.secrets['user'], st.secrets['password'],
+                                  st.secrets['user1'],st.secrets['password1'], st.secrets['url'])
+                    if len(d) > 0:
+                        df_file = json_normalize(d['results'])
+                        df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
+                        df_file['id'] = val
+                        # add event dataframe to general data
+                        ds.set_data(val, df_file) 
+                        frames.append(df_file)
+                    else:
+                        ds.set_data(val, pd.DataFrame())
                 my_bar.progress((i+1)/len(events))
     return frames
 
@@ -397,6 +398,7 @@ else:
 
     # merge similar names
     cat_list = df_ini['category_name'].unique().tolist()
+
     # loop over all catergories
     vectorizer = TfidfVectorizer(min_df=1, analyzer=ngrams)
 
@@ -412,8 +414,10 @@ else:
     
     for i in range(len(cat_list)):
         df_new = df_ini[df_ini['category_name'].str.contains(str(cat_list[i])) == True]
+
         # re-index the names column to continuous index starting at
         names_types = pd.Series(df_new['name'].values)
+
         if len(names_types) > 1:
             tf_idf_matrix = vectorizer.fit_transform(names_types)
             if len(names_types) > 4: 
@@ -435,6 +439,7 @@ else:
 
     # overwrite existing df_ini with events with name issues fixed
     df_ini = pd.concat(list_df_new)
+
     # replace wrong country codes and make all ISO
     df_ini["country_code"].replace("RJF", "RUS", regex=True, inplace=True)
     df_ini["country_code"].replace("JIF", "LIE", regex=True, inplace=True)
@@ -454,6 +459,8 @@ else:
                               other="Pan America", inplace=True)
     df_ini['continent'].where(~(df_ini['continent'].str.contains("North America")),
                               other="Pan America", inplace=True)
+    # String comparison does not hadle + well... replaced with p in csv and here replaced back
+    df_ini['category_name'].replace("p", "+", regex=True, inplace=True)
     df_ini['cat_type'] = df_ini['category_name']
     df_ini['cat_type'] = conv_to_type(df_ini, 'cat_type', DIS_INP)
 
@@ -475,10 +482,12 @@ else:
     df_par = df_par.join(df_evts[['id','startDate']].set_index('id'), on='id') 
     df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
     df_min.rename(columns={"startDate": "entryDate"}, inplace=True)
+
     df_max = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).max().reset_index()
     df_max.rename(columns={"startDate": "leavingDate"}, inplace=True)
     df_max['leavingDate'] = df_max['leavingDate'] + pd.offsets.DateOffset(years=2)
     df_total = pd.merge(df_min, df_max)
+
     st.write("in total ", len(df_total), "athletes")
 
     df_total['long_id'] = df_total['country'] + "_" + df_total['name'] + "_" + df_total['category_name']
@@ -540,7 +549,6 @@ else:
     df_time['name'] = df_time['temp_id'].apply(lambda x: x[1])
     df_time['category_name'] = df_time['temp_id'].apply(lambda x: x[2])
     df_time.drop('temp_id', inplace=True, axis=1)
-
     df_time['cat_type'] = df_time['category_name']
     df_time['cat_type'] = conv_to_type(df_time, 'cat_type', DIS_INP)
 

@@ -11,8 +11,8 @@ cat_id;name
 4935;Adults Contact Ju-Jitsu Men -85 Kg
 475;Adults Contact Ju-Jitsu Men -94 Kg
 4103;Adults Contact Ju-Jitsu Men -94 Kg
-476;Adults Contact Ju-Jitsu Men +94 Kg
-4936;Adults Contact Ju-Jitsu Men +94 Kg
+476;Adults Contact Ju-Jitsu Men p94 Kg
+4936;Adults Contact Ju-Jitsu Men p94 Kg
 4937;Adults Contact Ju-Jitsu Women -45 Kg
 4938;Adults Contact Ju-Jitsu Women -48 Kg
 477;Adults Contact Ju-Jitsu Women -49 Kg
@@ -23,8 +23,8 @@ cat_id;name
 4104;Adults Contact Ju-Jitsu Women -63 Kg
 480;Adults Contact Ju-Jitsu Women -70 Kg
 4941;Adults Contact Ju-Jitsu Women -70 Kg
-481;Adults Contact Ju-Jitsu Women +70 Kg
-4942;Adults Contact Ju-Jitsu Women +70 Kg
+481;Adults Contact Ju-Jitsu Women p70 Kg
+4942;Adults Contact Ju-Jitsu Women p70 Kg
 1499;Adults Contact Men -56 kg
 1500;Adults Contact Men -62 kg
 1501;Adults Contact Men -69 kg
@@ -61,9 +61,9 @@ cat_id;name
 1448;Adults Fighting Men -85 kg
 11;Adults Fighting Men -94 kg
 1449;Adults Fighting Men -94 kg
-12;Adults Fighting Men +94 kg
-247;Adults Fighting Men +94 kg
-1450;Adults Fighting Men +94 kg
+12;Adults Fighting Men p94 kg
+247;Adults Fighting Men p94 kg
+1450;Adults Fighting Men p94 kg
 1452;Adults Fighting Women -45 kg
 1453;Adults Fighting Women -48 kg
 13;Adults Fighting Women -49 kg
@@ -74,8 +74,8 @@ cat_id;name
 1456;Adults Fighting Women -63 kg
 16;Adults Fighting Women -70 kg
 1457;Adults Fighting Women -70 kg
-17;Adults Fighting Women +70 kg
-1458;Adults Fighting Women +70 kg
+17;Adults Fighting Women p70 kg
+1458;Adults Fighting Women p70 kg
 18;Adults Jiu-Jitsu Men -56 kg
 656;Adults Jiu-Jitsu Men -56 kg
 1473;Adults Jiu-Jitsu Men -56 kg
@@ -102,9 +102,9 @@ cat_id;name
 73;Adults Jiu-Jitsu Men -94 kg
 661;Adults Jiu-Jitsu Men -94 kg
 1478;Adults Jiu-Jitsu Men -94 kg
-24;Adults Jiu-Jitsu Men +94 kg
-662;Adults Jiu-Jitsu Men +94 kg
-1479;Adults Jiu-Jitsu Men +94 kg
+24;Adults Jiu-Jitsu Men p94 kg
+662;Adults Jiu-Jitsu Men p94 kg
+1479;Adults Jiu-Jitsu Men p94 kg
 565;Adults Jiu-Jitsu Women -45 kg
 1480;Adults Jiu-Jitsu Women -45 kg
 4150;Adults Jiu-Jitsu Women -45kg
@@ -126,9 +126,9 @@ cat_id;name
 28;Adults Jiu-Jitsu Women -70 kg
 666;Adults Jiu-Jitsu Women -70 kg
 1485;Adults Jiu-Jitsu Women -70 kg
-29;Adults Jiu-Jitsu Women +70 kg
-667;Adults Jiu-Jitsu Women +70 kg
-1486;Adults Jiu-Jitsu Women +70 kg
+29;Adults Jiu-Jitsu Women p70 kg
+667;Adults Jiu-Jitsu Women p70 kg
+1486;Adults Jiu-Jitsu Women p70 kg
 1079;Adults Para Duo
 4370;Adults Para Duo
 4951;Adults Para Duo
@@ -147,10 +147,10 @@ cat_id;name
 5646;Adults Para Jiu-Jitsu Men -77 kg
 100001;Adults Para Jiu-Jitsu Men -77 kg
 4352;Adults Para Jiu-Jitsu Men -85 kg
-7101;Adults Para Jiu-Jitsu Men +94 kg
+7101;Adults Para Jiu-Jitsu Men p94 kg
 1520;Adults Para Jiu-Jitsu Women -45 kg
 4357;Adults Para Jiu-Jitsu Women -70 kg
-100000;Adults Para Jiu-Jitsu Women +70 kg
+100000;Adults Para Jiu-Jitsu Women p70 kg
 30;Adults Show Men
 460;Adults Show Men
 722;Adults Show Men
@@ -193,21 +193,21 @@ cat_id;name
 5279;Master M1 Jiu-Jitsu Men -94 kg
 5665;Master M1 Jiu-Jitsu Men -94 kg
 6889;Master M1 Jiu-Jitsu Men -94 kg
-5666;Master M1 Jiu-Jitsu Men +94 kg
-6884;Master M1 Jiu-Jitsu Men +94 kg
+5666;Master M1 Jiu-Jitsu Men p94 kg
+6884;Master M1 Jiu-Jitsu Men p94 kg
 5556;Master M1 Jiu-Jitsu Women -57 kg
 5557;Master M1 Jiu-Jitsu Women -63 kg
-6878;Master M1 Jiu-Jitsu Women +70 kg
+6878;Master M1 Jiu-Jitsu Women p70 kg
 6933;Master M2 Fighting Men -85 kg
-6929;Master M2 Fighting Men +94 kg
+6929;Master M2 Fighting Men p94 kg
 5284;Master M2 Jiu-Jitsu Men -69 kg
 6943;Master M2 Jiu-Jitsu Men -69 kg
 5285;Master M2 Jiu-Jitsu Men -77 kg
 6945;Master M2 Jiu-Jitsu Men -85 kg
 6946;Master M2 Jiu-Jitsu Men -94 kg
 6958;Master M2 Jiu-Jitsu Men -94 kg
-5281;Master M2 Jiu-Jitsu Men +94 kg
-6941;Master M2 Jiu-Jitsu Men +94 kg
+5281;Master M2 Jiu-Jitsu Men p94 kg
+6941;Master M2 Jiu-Jitsu Men p94 kg
 6937;Master M2 Jiu-Jitsu Women -52 kg
 6988;Master M3 Fighting Men -69 kg
 6990;Master M3 Fighting Men -85 kg
@@ -220,7 +220,7 @@ cat_id;name
 7058;Master M4 Jiu-Jitsu Men -85 kg
 7059;Master M4 Jiu-Jitsu Men -94 kg
 7071;Master M4 Jiu-Jitsu Men -94 kg
-7066;Master M4 Jiu-Jitsu Men +94 kg
+7066;Master M4 Jiu-Jitsu Men p94 kg
 4207;U10 Duo Mixed
 14473;U10 Duo Mixed
 16000;U10 Fighting Men -24kg
@@ -229,19 +229,19 @@ cat_id;name
 16002;U10 Fighting Men -30kg
 16003;U10 Fighting Men -34kg
 16004;U10 Fighting Men -42kg
-760;U10 Fighting Men +42kg
+760;U10 Fighting Men p42kg
 16005;U10 Fighting Women -25kg
 4954;U10 Fighting Women -28kg
 16006;U10 Fighting Women -28kg
 16007;U10 Fighting Women -32kg
-783;U10 Fighting Women +40kg
+783;U10 Fighting Women p40kg
 4189;U10 Jiu-Jitsu Men -21 kg
 4190;U10 Jiu-Jitsu Men -24 kg
 4191;U10 Jiu-Jitsu Men -27kg
 4192;U10 Jiu-Jitsu Men -30 kg
 4193;U10 Jiu-Jitsu Men -34kg
 4194;U10 Jiu-Jitsu Men -38 kg
-4196;U10 Jiu-Jitsu Men +42 kg
+4196;U10 Jiu-Jitsu Men p42 kg
 4953;U10 Jiu-Jitsu Women -25 kg
 747;U12 Duo Men
 4244;U12 Duo Men
@@ -265,8 +265,8 @@ cat_id;name
 4214;U12 Fighting Men -46 kg
 676;U12 Fighting Men -50 kg
 4215;U12 Fighting Men -50 kg
-678;U12 Fighting Men +50 kg
-4216;U12 Fighting Men +50 kg
+678;U12 Fighting Men p50 kg
+4216;U12 Fighting Men p50 kg
 4218;U12 Fighting Women -25 kg
 4219;U12 Fighting Women -28 kg
 922;U12 Fighting Women -32 kg
@@ -279,8 +279,8 @@ cat_id;name
 4223;U12 Fighting Women -44 kg
 685;U12 Fighting Women -48 kg
 4224;U12 Fighting Women -48 kg
-686;U12 Fighting Women +48 kg
-4225;U12 Fighting Women +48 kg
+686;U12 Fighting Women p48 kg
+4225;U12 Fighting Women p48 kg
 4226;U12 Jiu-Jitsu Men -24 kg
 4227;U12 Jiu-Jitsu Men -27 kg
 4228;U12 Jiu-Jitsu Men -30 kg
@@ -289,7 +289,7 @@ cat_id;name
 4231;U12 Jiu-Jitsu Men -42 kg
 4232;U12 Jiu-Jitsu Men -46 kg
 4233;U12 Jiu-Jitsu Men -50 kg
-4234;U12 Jiu-Jitsu Men +50 kg
+4234;U12 Jiu-Jitsu Men p50 kg
 4236;U12 Jiu-Jitsu Women -25 kg
 4237;U12 Jiu-Jitsu Women -28 kg
 4238;U12 Jiu-Jitsu Women -32 kg
@@ -297,7 +297,7 @@ cat_id;name
 4240;U12 Jiu-Jitsu Women -40 kg
 4241;U12 Jiu-Jitsu Women -44 kg
 4242;U12 Jiu-Jitsu Women -48 kg
-4243;U12 Jiu-Jitsu Women +48 kg
+4243;U12 Jiu-Jitsu Women p48 kg
 4247;U12 Show Men
 923;U12 Show Mixed
 4249;U12 Show Mixed
@@ -318,7 +318,7 @@ cat_id;name
 4256;U14 Fighting Men -55 kg
 4257;U14 Fighting Men -60 kg
 4258;U14 Fighting Men -66 kg
-4259;U14 Fighting Men +66 kg
+4259;U14 Fighting Men p66 kg
 4261;U14 Fighting Women -28 kg
 4262;U14 Fighting Women -32 kg
 4263;U14 Fighting Women -36 kg
@@ -327,7 +327,7 @@ cat_id;name
 4266;U14 Fighting Women -48 kg
 4267;U14 Fighting Women -52 kg
 4268;U14 Fighting Women -57 kg
-4269;U14 Fighting Women +57 kg
+4269;U14 Fighting Women p57 kg
 4270;U14 Jiu-Jitsu Men -30 kg 
 7095;U14 Jiu-Jitsu Men -34 kg
 4271;U14 Jiu-Jitsu Men -34 kg 
@@ -339,7 +339,7 @@ cat_id;name
 4277;U14 Jiu-Jitsu Men -60 kg
 4278;U14 Jiu-Jitsu Men -66 kg
 7096;U14 Jiu-Jitsu Men -73 kg
-4279;U14 Jiu-Jitsu Men +66 kg
+4279;U14 Jiu-Jitsu Men p66 kg
 4281;U14 Jiu-Jitsu Women -28 kg 
 4282;U14 Jiu-Jitsu Women -30 kg 
 6860;U14 Jiu-Jitsu Women -36 kg
@@ -349,7 +349,7 @@ cat_id;name
 4287;U14 Jiu-Jitsu Women -52 kg
 4288;U14 Jiu-Jitsu Women -57 kg
 7093;U14 Jiu-Jitsu Women -57 kg
-4289;U14 Jiu-Jitsu Women +57 kg
+4289;U14 Jiu-Jitsu Women p57 kg
 4293;U14 Show Men
 781;U15 Duo Men
 780;U15 Duo Mixed
@@ -362,7 +362,7 @@ cat_id;name
 625;U15 Fighting Men -55 kg
 626;U15 Fighting Men -60 kg
 627;U15 Fighting Men -66 kg
-628;U15 Fighting Men +66 kg
+628;U15 Fighting Men p66 kg
 629;U15 Fighting Women -32 kg
 630;U15 Fighting Women -36 kg
 631;U15 Fighting Women -40 kg
@@ -371,7 +371,7 @@ cat_id;name
 634;U15 Fighting Women -52 kg
 635;U15 Fighting Women -57 kg
 636;U15 Fighting Women -63 kg
-637;U15 Fighting Women +63 kg
+637;U15 Fighting Women p63 kg
 647;U15 Jiu-Jitsu Men -34 kg
 648;U15 Jiu-Jitsu Men -37 kg
 649;U15 Jiu-Jitsu Men -41 kg
@@ -380,7 +380,7 @@ cat_id;name
 652;U15 Jiu-Jitsu Men -55 kg
 653;U15 Jiu-Jitsu Men -60 kg
 654;U15 Jiu-Jitsu Men -66 kg
-655;U15 Jiu-Jitsu Men +66 kg
+655;U15 Jiu-Jitsu Men p66 kg
 638;U15 Jiu-Jitsu Women -32 kg
 639;U15 Jiu-Jitsu Women -36 kg
 640;U15 Jiu-Jitsu Women -40 kg
@@ -389,7 +389,7 @@ cat_id;name
 643;U15 Jiu-Jitsu Women -52 kg
 644;U15 Jiu-Jitsu Women -57 kg
 645;U15 Jiu-Jitsu Women -63 kg
-646;U15 Jiu-Jitsu Women +63 kg
+646;U15 Jiu-Jitsu Women p63 kg
 777;U15 Show Men
 779;U15 Show Mixed
 778;U15 Show Women
@@ -405,10 +405,10 @@ cat_id;name
 4302;U16 Fighting Men -66 kg
 5821;U16 Fighting Men -66 kg
 4303;U16 Fighting Men -73 kg
-4304;U16 Fighting Men +73 kg
-5648;U16 Fighting Men +73 kg
-5822;U16 Fighting Men +73 kg
-5830;U16 Fighting Men +73 kg
+4304;U16 Fighting Men p73 kg
+5648;U16 Fighting Men p73 kg
+5822;U16 Fighting Men p73 kg
+5830;U16 Fighting Men p73 kg
 4305;U16 Fighting Women -32 kg
 4306;U16 Fighting Women -36 kg
 4307;U16 Fighting Women -40 kg
@@ -417,7 +417,7 @@ cat_id;name
 4310;U16 Fighting Women -52 kg
 4311;U16 Fighting Women -57 kg
 4312;U16 Fighting Women -63 kg
-4313;U16 Fighting Women +63 kg
+4313;U16 Fighting Women p63 kg
 4314;U16 Jiu-Jitsu Men -38 kg
 4315;U16 Jiu-Jitsu Men -42 kg
 5824;U16 Jiu-Jitsu Men -42 kg
@@ -428,7 +428,7 @@ cat_id;name
 4320;U16 Jiu-Jitsu Men -66 kg
 5825;U16 Jiu-Jitsu Men -66 kg
 4321;U16 Jiu-Jitsu Men -73 kg
-4322;U16 Jiu-Jitsu Men +73 kg
+4322;U16 Jiu-Jitsu Men p73 kg
 4323;U16 Jiu-Jitsu Women -32 kg
 4324;U16 Jiu-Jitsu Women -36 kg
 4325;U16 Jiu-Jitsu Women -40 kg
@@ -437,7 +437,7 @@ cat_id;name
 4328;U16 Jiu-Jitsu Women -52 kg
 4329;U16 Jiu-Jitsu Women -57 kg
 4330;U16 Jiu-Jitsu Women -63 kg
-4331;U16 Jiu-Jitsu Women +63 kg
+4331;U16 Jiu-Jitsu Women p63 kg
 4335;U16 Show Men
 4337;U16 Show Mixed
 4336;U16 Show Women
@@ -466,8 +466,8 @@ cat_id;name
 1765;U18 Fighting Men -73 kg
 107;U18 Fighting Men -81 kg
 1766;U18 Fighting Men -81 kg
-108;U18 Fighting Men +81 kg
-1767;U18 Fighting Men +81 kg
+108;U18 Fighting Men p81 kg
+1767;U18 Fighting Men p81 kg
 1806;U18 Fighting Women -40 kg
 110;U18 Fighting Women -44 kg
 1807;U18 Fighting Women -44 kg
@@ -484,8 +484,8 @@ cat_id;name
 1811;U18 Fighting Women -63 kg
 115;U18 Fighting Women -70 kg
 1812;U18 Fighting Women -70 kg
-116;U18 Fighting Women +70 kg
-1814;U18 Fighting Women +70 kg
+116;U18 Fighting Women p70 kg
+1814;U18 Fighting Women p70 kg
 123;U18 Jiu-Jitsu Men -46 kg
 1823;U18 Jiu-Jitsu Men -46 kg
 124;U18 Jiu-Jitsu Men -50 kg
@@ -515,10 +515,10 @@ cat_id;name
 821;U18 Jiu-Jitsu Men -81 kg
 1829;U18 Jiu-Jitsu Men -81 kg
 4344;U18 Jiu-Jitsu Men -81 kg
-130;U18 Jiu-Jitsu Men +81 kg
-707;U18 Jiu-Jitsu Men +81 kg
-814;U18 Jiu-Jitsu Men +81 kg
-1830;U18 Jiu-Jitsu Men +81 kg
+130;U18 Jiu-Jitsu Men p81 kg
+707;U18 Jiu-Jitsu Men p81 kg
+814;U18 Jiu-Jitsu Men p81 kg
+1830;U18 Jiu-Jitsu Men p81 kg
 131;U18 Jiu-Jitsu Women -40 kg
 832;U18 Jiu-Jitsu Women -40 kg
 1816;U18 Jiu-Jitsu Women -40 kg
@@ -548,9 +548,9 @@ cat_id;name
 714;U18 Jiu-Jitsu Women -70 kg
 838;U18 Jiu-Jitsu Women -70 kg
 1822;U18 Jiu-Jitsu Women -70 kg
-138;U18 Jiu-Jitsu Women +70 kg
-831;U18 Jiu-Jitsu Women +70 kg
-1815;U18 Jiu-Jitsu Women +70 kg
+138;U18 Jiu-Jitsu Women p70 kg
+831;U18 Jiu-Jitsu Women p70 kg
+1815;U18 Jiu-Jitsu Women p70 kg
 260;U18 Show Men
 466;U18 Show Men
 720;U18 Show Men
@@ -588,8 +588,8 @@ cat_id;name
 1433;U21 Fighting Men -85 kg
 252;U21 Fighting Men -94 kg
 1434;U21 Fighting Men -94 kg
-253;U21 Fighting Men +94 kg
-1435;U21 Fighting Men +94 kg
+253;U21 Fighting Men p94 kg
+1435;U21 Fighting Men p94 kg
 1436;U21 Fighting Women -45 kg
 1437;U21 Fighting Women -48 kg
 254;U21 Fighting Women -49 kg
@@ -600,8 +600,8 @@ cat_id;name
 1441;U21 Fighting Women -63 kg
 257;U21 Fighting Women -70 kg
 1442;U21 Fighting Women -70 kg
-258;U21 Fighting Women +70 kg
-1443;U21 Fighting Women +70 kg
+258;U21 Fighting Women p70 kg
+1443;U21 Fighting Women p70 kg
 139;U21 Jiu-Jitsu Men -56 kg
 728;U21 Jiu-Jitsu Men -56 kg
 825;U21 Jiu-Jitsu Men -56 kg
@@ -626,9 +626,9 @@ cat_id;name
 733;U21 Jiu-Jitsu Men -94 kg
 830;U21 Jiu-Jitsu Men -94 kg
 1464;U21 Jiu-Jitsu Men -94 kg
-145;U21 Jiu-Jitsu Men +94 kg
-823;U21 Jiu-Jitsu Men +94 kg
-1465;U21 Jiu-Jitsu Men +94 kg
+145;U21 Jiu-Jitsu Men p94 kg
+823;U21 Jiu-Jitsu Men p94 kg
+1465;U21 Jiu-Jitsu Men p94 kg
 1466;U21 Jiu-Jitsu Women -45 kg
 1467;U21 Jiu-Jitsu Women -48 kg
 6852;U21 Jiu-Jitsu Women -48 kg
@@ -650,10 +650,10 @@ cat_id;name
 738;U21 Jiu-Jitsu Women -70 kg
 840;U21 Jiu-Jitsu Women -70 kg
 1471;U21 Jiu-Jitsu Women -70 kg
-150;U21 Jiu-Jitsu Women +70 kg
-739;U21 Jiu-Jitsu Women +70 kg
-839;U21 Jiu-Jitsu Women +70 kg
-1472;U21 Jiu-Jitsu Women +70 kg
+150;U21 Jiu-Jitsu Women p70 kg
+739;U21 Jiu-Jitsu Women p70 kg
+839;U21 Jiu-Jitsu Women p70 kg
+1472;U21 Jiu-Jitsu Women p70 kg
 261;U21 Show Men
 467;U21 Show Men
 1497;U21 Show Men
