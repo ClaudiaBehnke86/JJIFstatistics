@@ -193,7 +193,7 @@ def get_events(dstart, dend, evtt_select, user, password):
               {'id': 'POp2017', 'country_code': 'FRA',
               'name': 'Paris Open 2017',
               'eventtype': 'A Class Tournament',
-              'startDate': '2016-04-29'},
+              'startDate': '2017-04-29'},
                 ]
     df2 = df2.append(df_wg, ignore_index = True)            
 
