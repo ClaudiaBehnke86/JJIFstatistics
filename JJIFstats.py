@@ -574,10 +574,15 @@ else:
 
     if mode =='History': 
         df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
-        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
+        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes (stacked))",
                       color_discrete_map=COLOR_MAP)
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
+
+        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
+                      color_discrete_map=COLOR_MAP)
+        fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig1a)
 
         df_timeev_jjnos = df_time[['dates', 'country', 'continent']].groupby(['dates', 'continent']).nunique().reset_index()
         fig0 = px.area(df_timeev_jjnos, x='dates', y='country', color='continent', title="Time evolution of JJIF - JJNOs",
@@ -585,6 +590,11 @@ else:
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0)
 
+        df_timeev_jjnos_dis = df_time[['dates', 'country', 'cat_type']].groupby(['dates', 'cat_type']).nunique().reset_index()
+        fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country', color='cat_type', title="Time evolution of JJIF - JJNOs discipline",
+                      color_discrete_map=COLOR_MAP)
+        fig0a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig0a)
 
         current_cat = st.checkbox('Show only currently active athletes', value=True)
         if current_cat: 
@@ -595,6 +605,12 @@ else:
         fig_cats = px.bar(df_cats, x="category_name", y="name", color="continent", title="Athletes per category", color_discrete_map=COLOR_MAP_CON)
         fig_cats.update_layout(xaxis={'categoryorder':'category ascending'})
         st.plotly_chart(fig_cats)
+
+        df_cats_jjnos = df_total[['country','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).nunique().reset_index()
+        
+        fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country", color="continent", title="JJNOs per category", color_discrete_map=COLOR_MAP_CON)
+        fig_cats_jjnos.update_layout(xaxis={'categoryorder':'category ascending'})
+        st.plotly_chart(fig_cats_jjnos)
 
         left_column, right_column = st.columns(2)
         with left_column:
