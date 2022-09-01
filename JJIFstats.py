@@ -197,9 +197,17 @@ def get_events(dstart, dend, evtt_select, user, password):
               {'id':'WCh2015', 'country_code': 'THA',
               'name': 'World Championship 2015',
               'eventtype': 'World Championship',
-              'startDate': '2015-11-23'}
-
+              'startDate': '2015-11-23'},
+              {'id':'WCh2014', 'country_code': 'FRA',
+              'name': 'World Championship 2014',
+              'eventtype': 'World Championship',
+              'startDate': '2014-11-28'},
+              {'id':'WCh2012', 'country_code': 'AUT',
+              'name': 'World Championship 2012',
+              'eventtype': 'World Championship',
+              'startDate': '2012-11-30'}
                 ]
+
     df2 = df2.append(df_wg, ignore_index = True)            
 
     df2['startDate'] = pd.to_datetime(df2["startDate"]).dt.date
