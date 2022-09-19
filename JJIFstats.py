@@ -205,8 +205,16 @@ def get_events(dstart, dend, evtt_select, user, password):
               {'id':'WCh2012', 'country_code': 'AUT',
               'name': 'World Championship 2012',
               'eventtype': 'World Championship',
-              'startDate': '2012-11-30'}
-                ]
+              'startDate': '2012-11-30'},
+              {'id': 'Go2015', 'country_code': 'GER',
+              'name': 'German Open 2015',
+              'eventtype': 'A Class Tournament',
+              'startDate': '2015-10-02'},
+              {'id': 'ACh2015', 'country_code': 'RSA',
+              'name': 'African Championship 2015',
+              'eventtype': 'Continental Championship',
+              'startDate': '2015-10-14'},
+            ]
 
     df2 = df2.append(df_wg, ignore_index = True)            
 
@@ -476,7 +484,7 @@ else:
                               other="Pan America", inplace=True)
     df_ini['continent'].where(~(df_ini['continent'].str.contains("North America")),
                               other="Pan America", inplace=True)
-    # String comparison does not hadle + well... replaced with p in csv and here replaced back
+    # String comparison does not handle + well... replaced with p in csv and here replaced back
     df_ini['category_name'].replace("p", "+", regex=True, inplace=True)
     df_ini['cat_type'] = df_ini['category_name']
     df_ini['cat_type'] = conv_to_type(df_ini, 'cat_type', DIS_INP)
