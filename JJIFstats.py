@@ -682,6 +682,11 @@ else:
                       title="age_division and disciplines")
         st.plotly_chart(fig3)
 
+        df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
+        fig4.update_xaxes(categoryorder='total descending')
+        st.plotly_chart(fig4)
+
     elif mode =='Single Event': 
 
         # for individual events
