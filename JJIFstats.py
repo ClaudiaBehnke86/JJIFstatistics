@@ -2,23 +2,22 @@
 Read in data (json) and display statstic on JJIF
 '''
 
-import json
-import requests
 import datetime as dt
+import json
+import os
+import re
+import requests
+
 from requests.auth import HTTPBasicAuth
-import pandas as pd 
+import pandas as pd
 from pandas import json_normalize
 import plotly.express as px
-import streamlit as st 
-import plotly.graph_objects as go
-import pycountry_convert as pc
-
 import plotly.graph_objs as pg
+import streamlit as st
+import pycountry_convert as pc
 import numpy as np
-import os
 
-#to check for similar names:
-import re
+# for the name matching
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import csr_matrix
 import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
@@ -28,20 +27,22 @@ from datastore import DataStore
 
 # the supported age_divisions
 AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15"]
-AGE_SEL = ["U16", "U18", "U21", "Adults"]  # preselected age_divisions
+# preselected age_divisions
+AGE_SEL = ["U16", "U18", "U21", "Adults"]
 
-# the supportes disciplines
+# the supported disciplines
 DIS_INP = ["Duo", "Show", "Jiu-Jitsu", "Fighting", "Contact"]
-DIS_SEL = ["Duo", "Show", "Jiu-Jitsu", "Fighting", "Contact"]  # presel discip
+# preselected disciplines
+DIS_SEL = ["Duo", "Show", "Jiu-Jitsu", "Fighting"]
 
 # continents
 CONT_INP = ["Europe", "Pan America", "Africa", "Asia", "Oceania"]
 
 # types of events
-EVENT_TYPE = ['National Championship', 'Continental Championship', 
+EVENT_TYPE = ['National Championship', 'Continental Championship',
               'World Championship', 'A Class Tournament',
               'World Games / Combat Games']
-EVENT_INP = ['Continental Championship', 
+EVENT_INP = ['Continental Championship',
              'World Championship', 'A Class Tournament',
              'World Games / Combat Games']
 
@@ -52,10 +53,10 @@ COLOR_MAP = {"Jiu-Jitsu": 'rgb(243, 28, 43)',
              "Contact": 'rgb(255,255,255)'}
 
 COLOR_MAP_CON = {"Europe": 'rgb(243, 28, 43)',
-             "Asia": 'rgb(0,144,206)',
-             "Pan America": 'rgb(211,211,211)',
-             "Africa": 'rgb(105,105,105)',
-             "Oceania": 'rgb(255,255,255)'}
+                 "Asia": 'rgb(0,144,206)',
+                 "Pan America": 'rgb(211,211,211)',
+                 "Africa": 'rgb(105,105,105)',
+                 "Oceania": 'rgb(255,255,255)'}
 
 
 def read_in_iso():
@@ -64,11 +65,11 @@ def read_in_iso():
 
     '''
     inp_file = pd.read_csv("Country,NOC,ISOcode.csv", sep=',')
-    IOC_ISO = inp_file[
-        ['NOC','ISO code']
+    ioc_iso = inp_file[
+        ['NOC', 'ISO code']
     ].set_index('NOC').to_dict()['ISO code']
 
-    return IOC_ISO
+    return ioc_iso
 
 
 def read_in_catkey():
@@ -78,38 +79,44 @@ def read_in_catkey():
 
     '''
     inp_file = pd.read_csv("catID_name.csv", sep=';')
-    key_map = inp_file[
+    key_map_inp = inp_file[
         ['cat_id', 'name']
     ].set_index('cat_id').to_dict()['name']
 
-    return key_map
-
+    return key_map_inp
 
 
 def data_setting():
     ''' The sidebar elements for the selection
     '''
-    mode = st.sidebar.selectbox('Please select your mode',
-                               ('History', 'Single Event', 'Countries'))
-    dstart = st.sidebar.date_input("From", dt.date(2010, 1, 1))
-    dend = st.sidebar.date_input("To", dt.date.today())
 
-    age_select = st.sidebar.multiselect('Select the age divisions',
-                                        AGE_INP,
-                                        AGE_SEL)
-    dis_select = st.sidebar.multiselect('Select the disciplines',
-                                        DIS_INP,
-                                        DIS_SEL)
+    st.sidebar.image("https://i0.wp.com/jjeu.eu/wp-content/uploads/2018/08/jjif-logo-170.png?fit=222%2C160&ssl=1",
+                     use_column_width='always')
+    mode_in = st.sidebar.selectbox('Please select your mode',
+                                   ('History', 'Single Event', 'Countries'))
+    dstart_in = st.sidebar.date_input("From", dt.date(2010, 1, 1))
+    dend_in = st.sidebar.date_input("To", dt.date.today())
+
+    age_select_in = st.sidebar.multiselect('Select the age divisions',
+                                           AGE_INP,
+                                           AGE_SEL)
+    dis_select_in = st.sidebar.multiselect('Select the disciplines',
+                                           DIS_INP,
+                                           DIS_SEL)
     para_in = st.sidebar.selectbox('Para setting',
-                                   ('Include','Exclude','Only'), help='Include = Inlude Para in statistc, Exclude = Exclude Para in statistc , Only = Shows only Para disciplines')
-    cont_select = st.sidebar.multiselect('Select the continent',
-                                         CONT_INP,
-                                         CONT_INP)
-    evtt_select = st.sidebar.multiselect('Select the event type',
-                                         EVENT_TYPE,
-                                         EVENT_INP)
+                                   ('Include', 'Exclude','Only'),
+                                   help='Include = Include Para in statistic,\
+                                   Exclude = Exclude Para in statistic , \
+                                   Only = Shows only Para disciplines')
+    cont_select_in = st.sidebar.multiselect('Select the continent',
+                                            CONT_INP,
+                                            CONT_INP)
+    evtt_select_in = st.sidebar.multiselect('Select the event type',
+                                            EVENT_TYPE,
+                                            EVENT_INP)
 
-    return age_select, dis_select, cont_select, dstart, dend, evtt_select, mode, para_in
+    return age_select_in, dis_select_in, cont_select_in, dstart_in, \
+        dend_in, evtt_select_in, mode_in, para_in
 
 
 def get_events(dstart, dend, evtt_select, user, password):
@@ -303,7 +310,7 @@ def FileCheck(numb, user, password, user1, password1, data_url):
 def conv_to_type(df, type_name, type_list):
     '''
     checks strings in data frames and
-    replaces them with defaul input
+    replaces them with default input
     '''
     for x in type_list:
         df[type_name].where(~(df[type_name].str.contains(x)),
@@ -378,7 +385,7 @@ ds = DataStore()
 
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
-age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_in = data_setting()
+age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_setting()
 
 df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
 frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
@@ -496,9 +503,9 @@ else:
     df_ini = df_ini[df_ini['cat_type'].isin(dis_select)]
     df_ini = df_ini[df_ini['age_division'].isin(age_select)]
     df_ini = df_ini[df_ini['continent'].isin(cont_select)]
-    if para_in =='Exclude':
+    if para_inp =='Exclude':
         df_ini = df_ini[~df_ini['category_name'].str.contains("Para")]
-    elif para_in =='Only':
+    elif para_inp =='Only':
         df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
     else:
         print("Include Para")
