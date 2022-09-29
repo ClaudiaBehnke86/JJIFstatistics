@@ -807,3 +807,8 @@ else:
                                              country_sel,
                                              country_sel)
             df_ini = df_ini[df_ini['country'].isin(countryt_select)]
+
+st.sidebar.markdown('<a href="mailto:sportdirector@jjif.org">Contact for problems</a>', unsafe_allow_html=True)
+
+LINK = '[Click here for the source code](https://github.com/ClaudiaBehnke86/JJIFseeding)'
+st.markdown(LINK, unsafe_allow_html=True)
