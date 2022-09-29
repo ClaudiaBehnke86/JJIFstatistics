@@ -39,12 +39,13 @@ DIS_SEL = ["Duo", "Show", "Jiu-Jitsu", "Fighting"]
 CONT_INP = ["Europe", "Pan America", "Africa", "Asia", "Oceania"]
 
 # types of events
-EVENT_TYPE = ['National Championship', 'Continental Championship',
-              'World Championship', 'A Class Tournament',
-              'World Games / Combat Games']
-EVENT_INP = ['Continental Championship',
-             'World Championship', 'A Class Tournament',
-             'World Games / Combat Games']
+EVENT_TYPE_INP = ['National Championship', 'Continental Championship',
+                  'World Championship', 'A Class Tournament',
+                  'World Games / Combat Games']
+# preselected types of events
+EVENT_TYPE_SEL = ['Continental Championship',
+                  'World Championship', 'A Class Tournament',
+                  'World Games / Combat Games']
 
 COLOR_MAP = {"Jiu-Jitsu": 'rgb(243, 28, 43)',
              "Fighting": 'rgb(0,144,206)',
@@ -104,7 +105,7 @@ def data_setting():
                                            DIS_INP,
                                            DIS_SEL)
     para_in = st.sidebar.selectbox('Para setting',
-                                   ('Include', 'Exclude','Only'),
+                                   ('Include', 'Exclude', 'Only'),
                                    help='Include = Include Para in statistic,\
                                    Exclude = Exclude Para in statistic , \
                                    Only = Shows only Para disciplines')
@@ -112,40 +113,48 @@ def data_setting():
                                             CONT_INP,
                                             CONT_INP)
     evtt_select_in = st.sidebar.multiselect('Select the event type',
-                                            EVENT_TYPE,
-                                            EVENT_INP)
+                                            EVENT_TYPE_INP,
+                                            EVENT_TYPE_SEL)
 
     return age_select_in, dis_select_in, cont_select_in, dstart_in, \
         dend_in, evtt_select_in, mode_in, para_in
 
 
-def get_events(dstart, dend, evtt_select, user, password):
+def get_events(dstart_in, dend_in, evtt_select, user, password):
     '''
-    enter ther start and
+    takes parameters an makes APIcall
 
     Parameters
     ----------
-    dstart
+    dstart_in
+        start date (from here on events are called) [datetime.date]
+    dend_in
+        end date (till here events are called) [datetime.date]
+    evtt_select
+        type of event selected. See EVENT_TYPE_INP for options [list]
+    user
+        sportdata API user name
+    password
+        sportdata API password
 
     '''
 
     start_str = dstart.strftime("%Y%m%d")
     end_str = dend.strftime("%Y%m%d")
-    uri = "https://www.sportdata.org/ju-jitsu/rest/events/ranked/" + start_str + "/" + end_str + "/"
+    uri = "https://www.sportdata.org/ju-jitsu/rest/events/ranked/" + \
+        start_str + "/" + end_str + "/"
 
-    response = requests.get(uri, auth=HTTPBasicAuth(user, password))
+    response = requests.get(uri, auth=HTTPBasicAuth(user, password), timeout=5)
 
-    d = response.json()
-    df2 = json_normalize(d)
+    d_in = response.json()
+    df2 = json_normalize(d_in)
     df2 = df2[['id', 'country_code', 'name', 'eventtype', 'startDate']]
     df2['startDate'] = df2['startDate'].str[:10]
 
-
-    # one needs to get wevent which are not in the db
-    # f2 = open("all_events.json", "r")
+    # one needs to get events which are not in the db
     # returns JSON object as
     # a dictionary
-    df_wg =[ {'id': 'TWG2013', 'country_code': 'COL',
+    df_wg = [{'id': 'TWG2013', 'country_code': 'COL',
               'name': 'The World Games 2013',
               'eventtype': 'World Games / Combat Games',
               'startDate': '2013-07-30'},
@@ -177,157 +186,219 @@ def get_events(dstart, dend, evtt_select, user, password):
               'name': 'German Open 2016',
               'eventtype': 'A Class Tournament',
               'startDate': '2016-09-24'},
-              {'id': 'BO2016', 'country_code': 'GER',
+             {'id': 'BO2016', 'country_code': 'GER',
               'name': 'Balkan Open 2016',
               'eventtype': 'A Class Tournament',
               'startDate': '2016-09-16'},
-              {'id':'SAO2016', 'country_code': 'COL',
+             {'id': 'SAO2016', 'country_code': 'COL',
               'name': 'South American Open 2016',
               'eventtype': 'A Class Tournament',
               'startDate': '2016-10-18'},
-              {'id':'WCh2016', 'country_code': 'POL',
+             {'id': 'WCh2016', 'country_code': 'POL',
               'name': 'World Championship 2016',
               'eventtype': 'World Championship',
               'startDate': '2016-11-25'},
-              {'id':'ACh2016', 'country_code': 'POL',
+             {'id': 'ACh2016', 'country_code': 'POL',
               'name': 'Asian Championship 2016',
               'eventtype': 'Continental Championship',
               'startDate': '2016-12-09'},
-              {'id': 'YWCH2017', 'country_code': 'GRE',
+             {'id': 'YWCH2017', 'country_code': 'GRE',
               'name': 'Youth World Championships 2017 Athens',
               'eventtype': 'World Championship',
               'startDate': '2017-03-17'},
-              {'id': 'POp2017', 'country_code': 'FRA',
+             {'id': 'POp2017', 'country_code': 'FRA',
               'name': 'Paris Open 2017',
               'eventtype': 'A Class Tournament',
               'startDate': '2017-04-29'},
-              {'id':'WCh2015', 'country_code': 'THA',
+             {'id': 'WCh2015', 'country_code': 'THA',
               'name': 'World Championship 2015',
               'eventtype': 'World Championship',
               'startDate': '2015-11-23'},
-              {'id':'WCh2014', 'country_code': 'FRA',
+             {'id': 'WCh2014', 'country_code': 'FRA',
               'name': 'World Championship 2014',
               'eventtype': 'World Championship',
               'startDate': '2014-11-28'},
-              {'id':'WCh2012', 'country_code': 'AUT',
+             {'id': 'WCh2012', 'country_code': 'AUT',
               'name': 'World Championship 2012',
               'eventtype': 'World Championship',
               'startDate': '2012-11-30'},
-              {'id': 'Go2015', 'country_code': 'GER',
+             {'id': 'Go2015', 'country_code': 'GER',
               'name': 'German Open 2015',
               'eventtype': 'A Class Tournament',
               'startDate': '2015-10-02'},
-              {'id': 'ACh2015', 'country_code': 'RSA',
+             {'id': 'ACh2015', 'country_code': 'RSA',
               'name': 'African Championship 2015',
               'eventtype': 'Continental Championship',
               'startDate': '2015-10-14'},
-            ]
+             ]
 
-    df2 = df2.append(df_wg, ignore_index = True)            
-
+    df2 = df2.append(df_wg, ignore_index=True)
     df2['startDate'] = pd.to_datetime(df2["startDate"]).dt.date
-    df2 = df2[df2['startDate'].between(dstart, dend, inclusive=False)]
+    df2 = df2[df2['startDate'].between(dstart_in, dend_in, inclusive=False)]
     df2 = df2[df2['eventtype'].isin(evtt_select)]
 
-    
     return df2
 
 
-def update_events(df_evts, age_select, dis_select, cont_select, evtt):
+def update_events(df_evts_in, age_select_in, dis_select_in, cont_select_in, evtt_in):
+    '''
+    allows a selection of events that are analyzed
 
-    frames = []
-    if len(age_select) > 0 and len(dis_select) > 0 and len(cont_select) > 0 and len(evtt) > 0:
-        with st.expander("Hide/include indivudual events"):
-            evt_sel = df_evts['name'].unique().tolist()
+    Parameters
+    ----------
+    df_events_in
+        data frame with all events [data frame]
+    age_select_in
+        age division selected. See AGE_INP for options [list]
+    dis_select_in
+        age division selected. See AGE_INP for options [list]
+    user
+        sportdata API user name
+    password
+        sportdata API password
+
+    '''
+
+    frames_merge = []
+    if len(age_select_in) > 0 and len(dis_select_in) > 0 and len(cont_select_in) > 0 and len(evtt_in) > 0:
+        with st.expander("Hide/include individual events"):
+            evt_sel_in = df_evts_in['name'].unique().tolist()
             container = st.container()
-            all = st.checkbox("Select all",value=True)
-            if all:
+            all_sel = st.checkbox("Select all", value=True)
+            if all_sel:
                 evtt_select = container.multiselect("Select the event:",
-                                                    evt_sel,
-                                                    evt_sel)
+                                                    evt_sel_in,
+                                                    evt_sel_in)
             else:
                 evtt_select = container.multiselect("Select the event:",
-                                                    evt_sel)
-            df_evts = df_evts[df_evts['name'].isin(evtt_select)]
-
-        # read in a all events and add to df
-        events = df_evts['id'].tolist()
+                                                    evt_sel_in)
+            df_evts_in = df_evts_in[df_evts_in['name'].isin(evtt_select)]
 
         my_bar = st.progress(0)
- 
-	# event loop
+        # read in a all events and add to df
         with st.spinner('Recalculate events'):
-            for i, val in enumerate(events):
+            for count, val in enumerate(df_evts_in['id'].tolist()):
                 if ds.check_cache(val):
                     df_file = ds.get_data(val)
                     if len(df_file) > 0:
-                        frames.append(df_file)
+                        frames_merge.append(df_file)
                 else:
-                    d = FileCheck(val, st.secrets['user'], st.secrets['password'],
-                                  st.secrets['user1'],st.secrets['password1'], st.secrets['url'])
-                    if len(d) > 0:
-                        df_file = json_normalize(d['results'])
+                    d_in = file_check(val, st.secrets['user'],
+                                      st.secrets['password'],
+                                      st.secrets['user1'],
+                                      st.secrets['password1'],
+                                      st.secrets['url'])
+                    if len(d_in) > 0:
+                        df_file = json_normalize(d_in['results'])
                         df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
                         df_file['id'] = val
                         # add event dataframe to general data
-                        ds.set_data(val, df_file) 
-                        frames.append(df_file)
+                        ds.set_data(val, df_file)
+                        frames_merge.append(df_file)
                     else:
                         ds.set_data(val, pd.DataFrame())
-                my_bar.progress((i+1)/len(events))
-    return frames
+                my_bar.progress((count+1)/len(df_evts_in['id'].tolist()))
+    return frames_merge
 
 
-def FileCheck(numb, user, password, user1, password1, data_url):
+def file_check(numb, user, password, user1, password1, data_url):
     '''
     runs over all files in event list and get them from
-    sportdata or from the local database
+    1. local database
+    2. sportdata API or
+    3. return that event does not exist
 
+    Parameters
+    ----------
+    numb
+        unique identifier [str]
+    user
+        sportdata API user name
+    password
+        sportdata API password
+    user1
+        local database user name
+    password
+        local database password
+    data_url
+        url of local database
     '''
-    # TODO:
-    # build cache and check if dict is already in cache
-    # dict is defined by numb (unique identifier)
-    db_string = "curl -u " + user1+":"+password1+" "+data_url+numb+".json > "+numb+".json"
-    os.system(db_string)
-    d = {}
-    if os.stat(numb+".json").st_size > 256:
-        with open(numb+".json", "r") as f:
-            d = json.load(f)   
-            return d
-    else:
-        print("Error: File "+ numb +" does not appear to in local database. Try online")
-        uri2 = 'https://www.sportdata.org/ju-jitsu/rest/event/resultscomplete/' + str(numb) + '/'
-        response2 = requests.get(uri2, auth=HTTPBasicAuth(user, password))
-        f3 = response2.json()
-        
-        if len(f3) <= 0:
-            print("event " + numb +" is not online, skip event")
-            d = {}        
-            return d
-        else:
-            return f3
 
-def conv_to_type(df, type_name, type_list):
+    # 1. local database
+    db_string = "curl -u " + user1 + ":" + password1 + \
+        " " + data_url + numb + ".json > " + numb + ".json"
+    os.system(db_string)
+    d_in = {}
+    if os.stat(numb+".json").st_size > 256:
+        with open(numb+".json", "r", encoding="utf-8") as f_in:
+            d_in = json.load(f_in)
+            return d_in
+    # 2. sportdata API
+    else:
+        print("File " + numb + " does not appear to in local database. Try online")
+        uri2 = 'https://www.sportdata.org/ju-jitsu/rest/event/resultscomplete/' + str(numb) + '/'
+        response2 = requests.get(uri2,
+                                 auth=HTTPBasicAuth(user, password),
+                                 timeout=5)
+        f_api = response2.json()
+
+        # 3. event does not exist
+        if len(f_api) <= 0:
+            print("Event " + numb + " is not online, skip event")
+            # return empty dataframe
+            d_empt = {}
+            return d_empt
+        else:
+            return f_api
+
+
+def conv_to_type(df_in, type_name, type_list):
     '''
     checks strings in data frames and
-    replaces them with default input
+    replaces them with types based on the _INP lists (see line 28 - 49)
+
+    Parameters
+    ----------
+    df_in
+        data frame to check [str]
+    type_name
+        the name of the _INP list to check [str]
+    type_list
+        of the _INP list to check [list]
     '''
-    for x in type_list:
-        df[type_name].where(~(df[type_name].str.contains(x)),
-                            other=x, inplace=True)
-    return df[type_name]
+    for inp_str in type_list:
+        df_in[type_name].where(~(df_in[type_name].str.contains(inp_str)),
+                               other=inp_str, inplace=True)
+
+    return df_in[type_name]
 
 
-def ngrams(string, n=3):
-    ''' used to check for simliar names'''
+def ngrams(string, n_gr=3):
+    '''
+    Function from name comparison
+    'https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e'
+
+    used to check for similar names
+    Parameters
+    ----------
+    string
+        input string
+    n_gr
+        ?
+
+    '''
     string = re.sub(r'[,-./]|\sBD',r'', string)
-    ngrams = zip(*[string[i:] for i in range(n)])
-    return [''.join(ngram) for ngram in ngrams]
+    ngrams_in = zip(*[string[i:] for i in range(n_gr)])
+    return [''.join(ngram_in) for ngram_in in ngrams_in]
 
 
 def awesome_cossim_top(A, B, ntop, lower_bound=0):
-    ''' force A and B as a CSR matrix.
-     If they have already been CSR, there is no overhead'''
+    '''
+    Function from name comparison
+    'https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e'
+
+    force A and B as a CSR matrix.
+    If they have already been CSR, there is no overhead'''
     A = A.tocsr()
     B = B.tocsr()
     M, _ = A.shape
@@ -350,11 +421,16 @@ def awesome_cossim_top(A, B, ntop, lower_bound=0):
         ntop,
         lower_bound,
         indptr, indices, data)
-    return csr_matrix((data, indices, indptr),shape=(M,N))
+    return csr_matrix((data, indices, indptr), shape=(M, N))
 
 
 def get_matches_df(sparse_matrix, name_vector, top=100):
-    '''unpacks the resulting sparse matrix'''
+    '''
+    Function from name comparison
+    'https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e'
+
+    unpacks the resulting sparse matrix
+    '''
     non_zeros = sparse_matrix.nonzero()
 
     sparserows = non_zeros[0]
@@ -367,20 +443,21 @@ def get_matches_df(sparse_matrix, name_vector, top=100):
 
     left_side = np.empty([nr_matches], dtype=object)
     right_side = np.empty([nr_matches], dtype=object)
-    similarity = np.zeros(nr_matches)
+    similarity_in = np.zeros(nr_matches)
 
     for index in range(0, nr_matches):
         left_side[index] = name_vector[sparserows[index]]
         right_side[index] = name_vector[sparsecols[index]]
-        similarity[index] = sparse_matrix.data[index]
+        similarity_in[index] = sparse_matrix.data[index]
 
     return pd.DataFrame({'left_side': left_side,
-                        'right_side': right_side,
-                        'similarity': similarity})
+                         'right_side': right_side,
+                         'similarity': similarity_in})
 
-# Main programm starts here
 
-#create data store
+# Main program starts here
+
+# create data store
 ds = DataStore()
 
 IOC_ISO = read_in_iso()
@@ -431,31 +508,35 @@ else:
     # merge similar names
     cat_list = df_ini['category_name'].unique().tolist()
 
-    # loop over all catergories
+    # loop over all categories
     vectorizer = TfidfVectorizer(min_df=1, analyzer=ngrams)
 
     with st.expander('Details on name matching', expanded=False):
         st.write('Similar names were matched to aviod double courning. This is based on:')
         st.write('https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e')
-        similarity = st.number_input('similarity', min_value=0.4, 
+        similarity = st.number_input('similarity', min_value=0.4,
                                      max_value=0.9, value=0.6,
                                      help="small number means more matches, high number only exact matches"
                                      )
     # create empty temporary list for events to fix names
     list_df_new = []
-    
-    for i in range(len(cat_list)):
-        df_new = df_ini[df_ini['category_name'].str.contains(str(cat_list[i])) == True]
+
+    for i, val in enumerate(cat_list):
+        df_new = df_ini[df_ini['category_name'].str.contains(str(val))]
 
         # re-index the names column to continuous index starting at
         names_types = pd.Series(df_new['name'].values)
 
         if len(names_types) > 1:
             tf_idf_matrix = vectorizer.fit_transform(names_types)
-            if len(names_types) > 4: 
-                matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 10, 0.4)
+            if len(names_types) > 4:
+                matches = awesome_cossim_top(tf_idf_matrix,
+                                             tf_idf_matrix.transpose(),
+                                             10, 0.4)
             else:
-                matches = awesome_cossim_top(tf_idf_matrix, tf_idf_matrix.transpose(), 4, 0.4) 
+                matches = awesome_cossim_top(tf_idf_matrix,
+                                             tf_idf_matrix.transpose(),
+                                             4, 0.4)
             # store the  matches into new dataframe called matched_df
             matches_df = get_matches_df(matches, names_types, top=200)
             # For removing all exact matches
@@ -491,7 +572,9 @@ else:
                               other="Pan America", inplace=True)
     df_ini['continent'].where(~(df_ini['continent'].str.contains("North America")),
                               other="Pan America", inplace=True)
-    # String comparison does not handle + well... replaced with p in csv and here replaced back
+
+    # String comparison does not handle + well... replaced with p in csv
+    # and here replaced back
     df_ini['category_name'].replace("p", "+", regex=True, inplace=True)
     df_ini['cat_type'] = df_ini['category_name']
     df_ini['cat_type'] = conv_to_type(df_ini, 'cat_type', DIS_INP)
@@ -503,15 +586,15 @@ else:
     df_ini = df_ini[df_ini['cat_type'].isin(dis_select)]
     df_ini = df_ini[df_ini['age_division'].isin(age_select)]
     df_ini = df_ini[df_ini['continent'].isin(cont_select)]
-    if para_inp =='Exclude':
+    if para_inp == 'Exclude':
         df_ini = df_ini[~df_ini['category_name'].str.contains("Para")]
-    elif para_inp =='Only':
+    elif para_inp == 'Only':
         df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
     else:
         print("Include Para")
 
     df_par = df_ini.copy()
-    df_par = df_par.join(df_evts[['id','startDate']].set_index('id'), on='id') 
+    df_par = df_par.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
     df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
     df_min.rename(columns={"startDate": "entryDate"}, inplace=True)
 
@@ -522,25 +605,26 @@ else:
 
     st.write("in total ", len(df_total), "athletes")
 
-    df_total['long_id'] = df_total['country'] + "_" + df_total['name'] + "_" + df_total['category_name']
+    df_total['long_id'] = df_total['country'] + "_" + df_total['name'] + "_" +\
+        df_total['category_name']
     df_total['gender'] = df_total['category_name']
     df_total['gender'].where(~(df_total['gender'].str.contains("Men")),
-                       other="Men", inplace=True)
+                             other="Men", inplace=True)
     df_total['gender'].where(~(df_total['gender'].str.contains("Women")),
-                       other="Women", inplace=True)
+                             other="Women", inplace=True)
     df_total['gender'].where(~(df_total['gender'].str.contains("Mixed")),
-                       other="Mixed", inplace=True)
+                             other="Mixed", inplace=True)
 
+    # convert country names to codes and check continents
     df_total['country_code'] = df_total['country'].apply(lambda x: pc.country_name_to_country_alpha2(x))
-
     df_total['continent'] = df_total['country_code'].apply(lambda x: pc.country_alpha2_to_continent_code(x))
     df_total['continent'] = df_total['continent'].apply(lambda x: pc.convert_continent_code_to_continent_name(x))
     df_total['country_code'] = df_total['country_code'].apply(lambda x: pc.country_alpha2_to_country_name(x))
     df_total['country_code'] = df_total['country_code'].apply(lambda x: pc.country_name_to_country_alpha3(x))
     df_total['continent'].where(~(df_total['continent'].str.contains("South America")),
-                          other="Pan America", inplace=True)
+                                other="Pan America", inplace=True)
     df_total['continent'].where(~(df_total['continent'].str.contains("North America")),
-                          other="Pan America", inplace=True)
+                                other="Pan America", inplace=True)
 
     df_total['cat_type'] = df_total['category_name']
     df_total['cat_type'] = conv_to_type(df_total, 'cat_type', DIS_INP)
@@ -548,8 +632,7 @@ else:
     df_total['age_division'] = df_total['category_name']
     df_total['age_division'] = conv_to_type(df_total, 'age_division', AGE_INP)
 
-
-    #merge the entires to a time range
+    # merge the entries to a time range
     df_crosstab = (
        pd.crosstab(
         index=df_total['long_id'],
@@ -587,57 +670,66 @@ else:
     df_time['age_division'] = df_time['category_name']
     df_time['age_division'] = conv_to_type(df_time, 'age_division', AGE_INP)
 
+    # convert country names to codes and check continents
     df_time['country_code'] = df_time['country'].apply(lambda x: pc.country_name_to_country_alpha2(x))
-
     df_time['continent'] = df_time['country_code'].apply(lambda x: pc.country_alpha2_to_continent_code(x))
     df_time['continent'] = df_time['continent'].apply(lambda x: pc.convert_continent_code_to_continent_name(x))
     df_time['continent'].where(~(df_time['continent'].str.contains("South America")),
-                          other="Pan America", inplace=True)
+                               other="Pan America", inplace=True)
     df_time['continent'].where(~(df_time['continent'].str.contains("North America")),
-                          other="Pan America", inplace=True)
+                               other="Pan America", inplace=True)
 
-    # start grapics here
-
+    # start graphics here
     st.header('JJIF statistic')
 
-    if mode =='History': 
+    if mode == 'History':
         df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
-        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes (stacked))",
-                      color_discrete_map=COLOR_MAP)
+        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type',
+                       title="Time evolution of JJIF - Athletes (stacked))",
+                       color_discrete_map=COLOR_MAP)
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
 
-        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type', title="Time evolution of JJIF - Athletes",
-                      color_discrete_map=COLOR_MAP)
+        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type',
+                        title="Time evolution of JJIF - Athletes",
+                        color_discrete_map=COLOR_MAP)
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
         df_timeev_jjnos = df_time[['dates', 'country', 'continent']].groupby(['dates', 'continent']).nunique().reset_index()
-        fig0 = px.area(df_timeev_jjnos, x='dates', y='country', color='continent', title="Time evolution of JJIF - JJNOs",
-                      color_discrete_map=COLOR_MAP_CON)
+        fig0 = px.area(df_timeev_jjnos, x='dates', y='country',
+                       color='continent',
+                       title="Time evolution of JJIF - JJNOs",
+                       color_discrete_map=COLOR_MAP_CON)
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0)
 
         df_timeev_jjnos_dis = df_time[['dates', 'country', 'cat_type']].groupby(['dates', 'cat_type']).nunique().reset_index()
-        fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country', color='cat_type', title="Time evolution of JJIF - JJNOs discipline",
-                      color_discrete_map=COLOR_MAP)
+        fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country',
+                        color='cat_type',
+                        title="Time evolution of JJIF - JJNOs discipline",
+                        color_discrete_map=COLOR_MAP)
         fig0a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0a)
 
-        current_cat = st.checkbox('Show only currently active athletes', value=True)
-        if current_cat: 
+        current_cat = st.checkbox('Show only currently active athletes',
+                                  value=True)
+        if current_cat:
             df_total = df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]
 
-        df_cats = df_total[['name','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).count().reset_index()
-        
-        fig_cats = px.bar(df_cats, x="category_name", y="name", color="continent", title="Athletes per category", color_discrete_map=COLOR_MAP_CON)
-        fig_cats.update_layout(xaxis={'categoryorder':'category ascending'})
+        df_cats = df_total[['name', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).count().reset_index()
+        fig_cats = px.bar(df_cats, x="category_name", y="name",
+                          color="continent",
+                          title="Athletes per category",
+                          color_discrete_map=COLOR_MAP_CON)
+        fig_cats.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats)
 
-        df_cats_jjnos = df_total[['country','category_name','cat_type','continent']].groupby(['category_name','cat_type','continent']).nunique().reset_index()
-        
-        fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country", color="continent", title="JJNOs per category", color_discrete_map=COLOR_MAP_CON)
-        fig_cats_jjnos.update_layout(xaxis={'categoryorder':'category ascending'})
+        df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
+        fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
+                                color="continent", title="JJNOs per category",
+                                color_discrete_map=COLOR_MAP_CON)
+        fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats_jjnos)
 
         left_column, right_column = st.columns(2)
@@ -654,64 +746,62 @@ else:
                                y=0.99,
                                xanchor="left",
                                x=0.01))
-            st.plotly_chart(fig1,use_container_width=True)
+            st.plotly_chart(fig1, use_container_width=True)
 
         with right_column:
-        	df_gender = pd.DataFrame()
-        	df_gender['gender'] = df_total['gender'].value_counts().index
-        	df_gender['counts'] = df_total['gender'].value_counts().values	
-        	fig2 = px.pie(df_gender, values='counts', names='gender', color='gender',
+            df_gender = pd.DataFrame()
+            df_gender['gender'] = df_total['gender'].value_counts().index
+            df_gender['counts'] = df_total['gender'].value_counts().values
+            fig2 = px.pie(df_gender, values='counts', names='gender',
+                          color='gender',
                           color_discrete_map={"Women": 'rgb(243, 28, 43)',
                                               "Men": 'rgb(0,144,206)',
                                               "Mixed": 'rgb(211,211,211)'},
                           title='Gender distribution')
-        	st.plotly_chart(fig2,use_container_width=True)
+            st.plotly_chart(fig2, use_container_width=True)
 
         df_map = pd.DataFrame()
         df_map['country'] = df_total['country_code'].value_counts().index
         df_map['counts'] = df_total['country_code'].value_counts().values
-        data = dict(type='choropleth', 
-                    locations=df_map['country'], 
-                    z=df_map['counts'])
+        data = dict(type='choropleth',
+                    locations=df_map['country'], z=df_map['counts'])
 
-        layout = dict(title='Participating JJNOs', 
+        layout = dict(title='Participating JJNOs',
                       geo=dict(showframe=True,
-                               projection={'type':'robinson'}))
+                               projection={'type': 'robinson'}))
         x = pg.Figure(data=[data], layout=layout)
         st.plotly_chart(x)
 
-
-
-        df_age_dis = df_total[['name','age_division','cat_type','continent']].groupby(['cat_type','age_division','continent']).count().reset_index()
-        fig3 = px.bar(df_age_dis, x="age_division", y= "name",
+        df_age_dis = df_total[['name', 'age_division', 'cat_type', 'continent']].groupby(['cat_type', 'age_division', 'continent']).count().reset_index()
+        fig3 = px.bar(df_age_dis, x="age_division", y="name",
                       color="cat_type", color_discrete_map=COLOR_MAP,
-                      text='name',hover_data=["continent"],
+                      text='name', hover_data=["continent"],
                       title="age_division and disciplines")
         st.plotly_chart(fig3)
 
-        df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
-        fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
+        df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
+                      color='rank', text='name', title="Medals")
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
-    elif mode =='Single Event': 
+    elif mode == 'Single Event':
 
         # for individual events
         df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
-        df_evts_plot = df_evts_plot.join(df_evts[['id','startDate']].set_index('id'), on='id')
-        fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type", color_discrete_map=COLOR_MAP, line_group="age_division")
+        df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+        fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type",
+                       color_discrete_map=COLOR_MAP, line_group="age_division")
         st.plotly_chart(fig3)
 
-
-
-        df_medal = df_ini[['country','rank','name']].groupby(['country','rank']).count().reset_index()
-        fig4 = px.bar(df_medal[df_medal['rank']<4], x='country', y= 'name', color='rank',text='name', title="Medals")
+        df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
+                      color='rank', text='name', title="Medals")
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
     else:
-
-        with st.expander("Hide/include indivudual countries"):
+        with st.expander("Hide/include individual countries"):
             country_sel = df_ini['country'].unique().tolist()
             countryt_select = st.multiselect('Select the country',
                                              country_sel,
