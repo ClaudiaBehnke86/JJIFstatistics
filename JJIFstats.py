@@ -40,7 +40,7 @@ CONT_INP = ["Europe", "Pan America", "Africa", "Asia", "Oceania"]
 
 # types of events
 EVENT_TYPE_INP = ['National Championship', 'Continental Championship',
-                  'World Champiƒonship', 'A Class Tournament',
+                  'World Championship', 'A Class Tournament',
                   'B Class Tournament',
                   'World Games / Combat Games']
 # preselected types of events
