@@ -40,11 +40,13 @@ CONT_INP = ["Europe", "Pan America", "Africa", "Asia", "Oceania"]
 
 # types of events
 EVENT_TYPE_INP = ['National Championship', 'Continental Championship',
-                  'World Championship', 'A Class Tournament',
+                  'World Champiƒonship', 'A Class Tournament',
+                  'B Class Tournament',
                   'World Games / Combat Games']
 # preselected types of events
 EVENT_TYPE_SEL = ['Continental Championship',
                   'World Championship', 'A Class Tournament',
+                  'B Class Tournament',
                   'World Games / Combat Games']
 
 COLOR_MAP = {"Jiu-Jitsu": 'rgb(243, 28, 43)',
@@ -290,11 +292,12 @@ def update_events(df_evts_in, age_select_in, dis_select_in, cont_select_in, evtt
                                       st.secrets['url'])
                     if len(d_in) > 0:
                         df_file = json_normalize(d_in['results'])
-                        df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
-                        df_file['id'] = val
-                        # add event dataframe to general data
-                        ds.set_data(val, df_file)
-                        frames_merge.append(df_file)
+                        if len(df_file) > 0:
+                            df_file = df_file[['category_id', 'category_name', 'country_code', 'rank', 'name']]
+                            df_file['id'] = val
+                            # add event dataframe to general data
+                            ds.set_data(val, df_file)
+                            frames_merge.append(df_file)
                     else:
                         ds.set_data(val, pd.DataFrame())
                 my_bar.progress((count+1)/len(df_evts_in['id'].tolist()))
@@ -456,6 +459,10 @@ def get_matches_df(sparse_matrix, name_vector, top=100):
 
 
 # Main program starts here
+st.header('JJIF statistic')
+
+with st.expander("Thanks to"):
+    st.success('The Data contributors: \n Geert Assmann \n Nicolas \'Niggi\' Baez', icon="✅")
 
 # create data store
 ds = DataStore()
@@ -680,8 +687,6 @@ else:
                                other="Pan America", inplace=True)
 
     # start graphics here
-    st.header('JJIF statistic')
-
     if mode == 'History':
         df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
         fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type',
@@ -786,6 +791,8 @@ else:
         st.plotly_chart(fig4)
 
     elif mode == 'Single Event':
+
+
 
         # for individual events
         df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
