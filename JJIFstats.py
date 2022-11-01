@@ -232,6 +232,22 @@ def get_events(dstart_in, dend_in, evtt_select, user, password):
               'name': 'African Championship 2015',
               'eventtype': 'Continental Championship',
               'startDate': '2015-10-14'},
+             {'id': 'TWG2001', 'country_code': 'JPN',
+              'name': 'The World Games 2001',
+              'eventtype': 'World Games / Combat Games',
+              'startDate': '2001-08-16'},
+             {'id': 'TWG2005', 'country_code': 'GER',
+              'name': 'The World Games 2005',
+              'eventtype': 'World Games / Combat Games',
+              'startDate': '2005-07-21'},
+              {'id': 'TWG2009', 'country_code': 'TPE',
+              'name': 'The World Games 2009',
+              'eventtype': 'World Games / Combat Games',
+              'startDate': '2009-07-21'},
+              {'id': 'TWG2017', 'country_code': 'POL',
+              'name': 'The World Games 2017',
+              'eventtype': 'World Games / Combat Games',
+              'startDate': '2017-07-28'},
              ]
 
     df2 = df2.append(df_wg, ignore_index=True)
@@ -263,18 +279,6 @@ def update_events(df_evts_in, age_select_in, dis_select_in, cont_select_in, evtt
 
     frames_merge = []
     if len(age_select_in) > 0 and len(dis_select_in) > 0 and len(cont_select_in) > 0 and len(evtt_in) > 0:
-        with st.expander("Hide/include individual events"):
-            evt_sel_in = df_evts_in['name'].unique().tolist()
-            container = st.container()
-            all_sel = st.checkbox("Select all", value=True)
-            if all_sel:
-                evtt_select = container.multiselect("Select the event:",
-                                                    evt_sel_in,
-                                                    evt_sel_in)
-            else:
-                evtt_select = container.multiselect("Select the event:",
-                                                    evt_sel_in)
-            df_evts_in = df_evts_in[df_evts_in['name'].isin(evtt_select)]
 
         my_bar = st.progress(0)
         # read in a all events and add to df
@@ -472,7 +476,11 @@ key_map = read_in_catkey()
 age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_setting()
 
 df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
+
+
 frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
+
+evt_sel = df_evts['name'].unique()
 
 if len(frames) == 0:
     st.write("please select at least one item in each category")
@@ -792,7 +800,9 @@ else:
 
     elif mode == 'Single Event':
 
-
+        evtt_select = st.multiselect("Select the event:",
+                                     evt_sel)
+        df_evts = df_evts[df_evts['name'].isin(evtt_select)]
 
         # for individual events
         df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
