@@ -3,6 +3,7 @@ pandas
 plotly
 streamlit
 sklearn
+scikit-learn:
 pycountry_convert
 scipy
 sparse_dot_topn
