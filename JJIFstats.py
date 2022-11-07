@@ -1,5 +1,5 @@
 '''
-Read in data (json) and display statstic on JJIF
+Read in data (json) and display statistic on JJIF
 '''
 
 import datetime as dt
@@ -26,7 +26,7 @@ import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
 from datastore import DataStore
 
 # the supported age_divisions
-AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15"]
+AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15", "Masters"]
 # preselected age_divisions
 AGE_SEL = ["U16", "U18", "U21", "Adults"]
 
@@ -61,6 +61,11 @@ COLOR_MAP_CON = {"Europe": 'rgb(243, 28, 43)',
                  "Africa": 'rgb(105,105,105)',
                  "Oceania": 'rgb(255,255,255)'}
 
+COLOR_MAP_AGE = {"Adults": 'rgb(243, 28, 43)',
+                 "U21": 'rgb(0,144,206)',
+                 "U18": 'rgb(211,211,211)',
+                 "U16": 'rgb(105,105,105)',
+                 "U14": 'rgb(255,255,255)'}
 
 def read_in_iso():
     ''' Read in file
@@ -96,7 +101,7 @@ def data_setting():
     st.sidebar.image("https://i0.wp.com/jjeu.eu/wp-content/uploads/2018/08/jjif-logo-170.png?fit=222%2C160&ssl=1",
                      use_column_width='always')
     mode_in = st.sidebar.selectbox('Please select your mode',
-                                   ('History', 'Single Event', 'Countries'))
+                                   ('History', 'Single Event', 'Countries', 'World Games'))
     dstart_in = st.sidebar.date_input("From", dt.date(2010, 1, 1))
     dend_in = st.sidebar.date_input("To", dt.date.today())
 
@@ -154,101 +159,11 @@ def get_events(dstart_in, dend_in, evtt_select, user, password):
     df2['startDate'] = df2['startDate'].str[:10]
 
     # one needs to get events which are not in the db
-    # returns JSON object as
-    # a dictionary
-    df_wg = [{'id': 'TWG2013', 'country_code': 'COL',
-              'name': 'The World Games 2013',
-              'eventtype': 'World Games / Combat Games',
-              'startDate': '2013-07-30'},
-             {'id': 'YWCh2016', 'country_code': 'ESP',
-              'name': 'U21 World Championships 2016 Madrid',
-              'eventtype': 'World Championship',
-              'startDate': '2016-03-18'},
-             {'id': 'POp2016', 'country_code': 'FRA',
-              'name': 'Paris Open 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-04-30'},
-             {'id': 'EOC2016', 'country_code': 'BEL',
-              'name': 'European Open Championship 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-06-04'},
-             {'id': 'USO2016', 'country_code': 'USA',
-              'name': 'US Open 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-07-09'},
-             {'id': 'AFCH2016', 'country_code': 'RSA',
-              'name': 'African Championship 2016',
-              'eventtype': 'Continental Championship',
-              'startDate': '2016-08-20'},
-             {'id': 'Pam2016', 'country_code': 'PAN',
-              'name': 'Pan American Championship 2016',
-              'eventtype': 'Continental Championship',
-              'startDate': '2016-08-26'},
-             {'id': 'Go2016', 'country_code': 'GER',
-              'name': 'German Open 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-09-24'},
-             {'id': 'BO2016', 'country_code': 'GER',
-              'name': 'Balkan Open 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-09-16'},
-             {'id': 'SAO2016', 'country_code': 'COL',
-              'name': 'South American Open 2016',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2016-10-18'},
-             {'id': 'WCh2016', 'country_code': 'POL',
-              'name': 'World Championship 2016',
-              'eventtype': 'World Championship',
-              'startDate': '2016-11-25'},
-             {'id': 'ACh2016', 'country_code': 'POL',
-              'name': 'Asian Championship 2016',
-              'eventtype': 'Continental Championship',
-              'startDate': '2016-12-09'},
-             {'id': 'YWCH2017', 'country_code': 'GRE',
-              'name': 'Youth World Championships 2017 Athens',
-              'eventtype': 'World Championship',
-              'startDate': '2017-03-17'},
-             {'id': 'POp2017', 'country_code': 'FRA',
-              'name': 'Paris Open 2017',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2017-04-29'},
-             {'id': 'WCh2015', 'country_code': 'THA',
-              'name': 'World Championship 2015',
-              'eventtype': 'World Championship',
-              'startDate': '2015-11-23'},
-             {'id': 'WCh2014', 'country_code': 'FRA',
-              'name': 'World Championship 2014',
-              'eventtype': 'World Championship',
-              'startDate': '2014-11-28'},
-             {'id': 'WCh2012', 'country_code': 'AUT',
-              'name': 'World Championship 2012',
-              'eventtype': 'World Championship',
-              'startDate': '2012-11-30'},
-             {'id': 'Go2015', 'country_code': 'GER',
-              'name': 'German Open 2015',
-              'eventtype': 'A Class Tournament',
-              'startDate': '2015-10-02'},
-             {'id': 'ACh2015', 'country_code': 'RSA',
-              'name': 'African Championship 2015',
-              'eventtype': 'Continental Championship',
-              'startDate': '2015-10-14'},
-             {'id': 'TWG2001', 'country_code': 'JPN',
-              'name': 'The World Games 2001',
-              'eventtype': 'World Games / Combat Games',
-              'startDate': '2001-08-16'},
-             {'id': 'TWG2005', 'country_code': 'GER',
-              'name': 'The World Games 2005',
-              'eventtype': 'World Games / Combat Games',
-              'startDate': '2005-07-21'},
-              {'id': 'TWG2009', 'country_code': 'TPE',
-              'name': 'The World Games 2009',
-              'eventtype': 'World Games / Combat Games',
-              'startDate': '2009-07-21'},
-              {'id': 'TWG2017', 'country_code': 'POL',
-              'name': 'The World Games 2017',
-              'eventtype': 'World Games / Combat Games',
-              'startDate': '2017-07-28'},
-             ]
+    # returns csv as df
+    inp_file = pd.read_csv("Events.csv", sep=';')
+    df_wg = inp_file[
+        ['id', 'country_code', 'name', 'eventtype', 'startDate']
+    ]
 
     df2 = df2.append(df_wg, ignore_index=True)
     df2['startDate'] = pd.to_datetime(df2["startDate"]).dt.date
@@ -308,6 +223,7 @@ def update_events(df_evts_in, age_select_in, dis_select_in, cont_select_in, evtt
     return frames_merge
 
 
+@st.cache
 def file_check(numb, user, password, user1, password1, data_url):
     '''
     runs over all files in event list and get them from
@@ -475,18 +391,29 @@ IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
 age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_setting()
 
-df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
+if mode == "World Games":
+    evtt = ["World Games / Combat Games"]
+    dstart = dt.date(2001, 1, 1)
 
+
+df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
+evt_sel = df_evts['name'].unique()
+
+if mode == 'Single Event':
+    evtt_select = st.selectbox("Select the event:",
+                               evt_sel)
+    if len(evtt_select) > 0:
+        df_evts = df_evts[df_evts['name']==evtt_select]
 
 frames = update_events(df_evts, age_select, dis_select, cont_select, evtt)
-
-evt_sel = df_evts['name'].unique()
 
 if len(frames) == 0:
     st.write("please select at least one item in each category")
 else:
     # cleanup of df
+
     df_ini = pd.concat(frames)
+
     df_ini['name'] = df_ini['name'].apply(lambda x: x.upper())
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
@@ -527,7 +454,7 @@ else:
     vectorizer = TfidfVectorizer(min_df=1, analyzer=ngrams)
 
     with st.expander('Details on name matching', expanded=False):
-        st.write('Similar names were matched to aviod double courning. This is based on:')
+        st.write('Similar names were matched to avoid double counting. This is based on:')
         st.write('https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e')
         similarity = st.number_input('similarity', min_value=0.4,
                                      max_value=0.9, value=0.6,
@@ -562,8 +489,8 @@ else:
             df_new.loc[:, 'name'] = df_new['name'].replace(dict_map)
 
             list_df_new.append(df_new)
-            if len(dict_map) > 0:
-                print('fixing ' + str(len(dict_map)) + ' issues with names')
+            # if len(dict_map) > 0:
+            #    print('fixing ' + str(len(dict_map)) + ' issues with names')
 
     # overwrite existing df_ini with events with name issues fixed
     df_ini = pd.concat(list_df_new)
@@ -607,6 +534,13 @@ else:
         df_ini = df_ini[df_ini['category_name'].str.contains("Para")]
     else:
         print("Include Para")
+
+    if mode == "Countries":
+        country_sel = df_ini['country'].unique().tolist()
+        countryt_select = st.selectbox('Select the country',
+                                       country_sel)
+        if len(countryt_select) > 0:
+            df_ini = df_ini[df_ini['country'] == countryt_select]
 
     df_par = df_ini.copy()
     df_par = df_par.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
@@ -696,32 +630,47 @@ else:
 
     # start graphics here
     if mode == 'History':
-        df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
-        fig1 = px.area(df_timeev, x='dates', y='name', color='cat_type',
+
+        func_of = st.radio("Display time evolution for:",
+                           ('Continent', 'Discipline', 'Age Divisions'),
+                           horizontal=True)
+        if func_of == 'Discipline':
+            fuc_of_ty = 'cat_type'
+            col_sel = COLOR_MAP
+        elif func_of == 'Continent':
+            fuc_of_ty = 'continent'
+            col_sel = COLOR_MAP_CON
+        else:
+            fuc_of_ty = 'age_division'
+            col_sel = COLOR_MAP_AGE
+
+
+        df_timeev = df_time[['dates', 'name', fuc_of_ty]].groupby(['dates', fuc_of_ty]).count().reset_index()
+        fig1 = px.area(df_timeev, x='dates', y='name', color=fuc_of_ty,
                        title="Time evolution of JJIF - Athletes (stacked))",
-                       color_discrete_map=COLOR_MAP)
+                       color_discrete_map=col_sel)
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
 
-        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type',
+        fig1a = px.line(df_timeev, x='dates', y='name', color=fuc_of_ty,
                         title="Time evolution of JJIF - Athletes",
-                        color_discrete_map=COLOR_MAP)
+                        color_discrete_map=col_sel)
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
-        df_timeev_jjnos = df_time[['dates', 'country', 'continent']].groupby(['dates', 'continent']).nunique().reset_index()
+        df_timeev_jjnos = df_time[['dates', 'country', fuc_of_ty]].groupby(['dates', fuc_of_ty]).nunique().reset_index()
         fig0 = px.area(df_timeev_jjnos, x='dates', y='country',
-                       color='continent',
-                       title="Time evolution of JJIF - JJNOs",
-                       color_discrete_map=COLOR_MAP_CON)
+                       color=fuc_of_ty,
+                       title="Time evolution of JJIF - JJNOs (stacked)",
+                       color_discrete_map=col_sel)
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0)
 
-        df_timeev_jjnos_dis = df_time[['dates', 'country', 'cat_type']].groupby(['dates', 'cat_type']).nunique().reset_index()
+        df_timeev_jjnos_dis = df_time[['dates', 'country', fuc_of_ty]].groupby(['dates', fuc_of_ty]).nunique().reset_index()
         fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country',
-                        color='cat_type',
-                        title="Time evolution of JJIF - JJNOs discipline",
-                        color_discrete_map=COLOR_MAP)
+                        color=fuc_of_ty,
+                        title="Time evolution of JJIF - JJNOs",
+                        color_discrete_map=col_sel)
         fig0a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0a)
 
@@ -800,16 +749,13 @@ else:
 
     elif mode == 'Single Event':
 
-        evtt_select = st.multiselect("Select the event:",
-                                     evt_sel)
-        df_evts = df_evts[df_evts['name'].isin(evtt_select)]
-
         # for individual events
-        df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
-        df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
-        fig3 = px.area(df_evts_plot, x="startDate", y='name', color="cat_type",
-                       color_discrete_map=COLOR_MAP, line_group="age_division")
-        st.plotly_chart(fig3)
+        df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
+        fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
+                                color="continent", title="JJNOs per category",
+                                color_discrete_map=COLOR_MAP_CON)
+        fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
+        st.plotly_chart(fig_cats_jjnos)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
@@ -817,13 +763,64 @@ else:
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
+    elif mode == 'World Games':
+
+        df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
+                      color='rank', text='name', title="Medals")
+        fig4.update_xaxes(categoryorder='total descending')
+        st.plotly_chart(fig4)
+
+        df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
+        df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+        fig3 = px.bar(df_evts_plot, x="startDate", y='name', color="cat_type",
+                       color_discrete_map=COLOR_MAP)
+        st.plotly_chart(fig3)
+
     else:
-        with st.expander("Hide/include individual countries"):
-            country_sel = df_ini['country'].unique().tolist()
-            countryt_select = st.multiselect('Select the country',
-                                             country_sel,
-                                             country_sel)
-            df_ini = df_ini[df_ini['country'].isin(countryt_select)]
+
+        left_column, right_column = st.columns(2)
+        with left_column:
+            df_cat = pd.DataFrame()
+            df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
+            df_cat['counts'] = df_ini['cat_type'].value_counts().values
+            fig1 = px.pie(df_cat, values='counts',
+                          names='cat_type', color='cat_type',
+                          title='Discipline distribution',
+                          color_discrete_map=COLOR_MAP)
+            fig1.update_layout(legend=dict(
+                               yanchor="top",
+                               y=0.99,
+                               xanchor="left",
+                               x=0.01))
+            st.plotly_chart(fig1, use_container_width=True)
+
+        with right_column:
+            df_gender = pd.DataFrame()
+            df_gender['gender'] = df_total['gender'].value_counts().index
+            df_gender['counts'] = df_total['gender'].value_counts().values
+            fig2 = px.pie(df_gender, values='counts', names='gender',
+                          color='gender',
+                          color_discrete_map={"Women": 'rgb(243, 28, 43)',
+                                              "Men": 'rgb(0,144,206)',
+                                              "Mixed": 'rgb(211,211,211)'},
+                          title='Gender distribution')
+            st.plotly_chart(fig2, use_container_width=True)
+
+        df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
+        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type',
+                        title="Time evolution of " + str(countryt_select) + " - Disciplines",
+                        color_discrete_map=COLOR_MAP)
+        fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig1a)
+
+        df_timeev_age_cat = df_time[['dates', 'name', 'age_division']].groupby(['dates', 'age_division']).count().reset_index()
+        fig1b = px.line(df_timeev_age_cat, x='dates', y='name', color='age_division',
+                        title="Time evolution of " + str(countryt_select) + " - Age Divisions",
+                        color_discrete_map=COLOR_MAP_AGE)
+        fig1b.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.plotly_chart(fig1b)
+
 
 st.sidebar.markdown('<a href="mailto:sportdirector@jjif.org">Contact for problems</a>', unsafe_allow_html=True)
 
