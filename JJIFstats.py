@@ -1,5 +1,12 @@
 '''
-Read in data (json) and display statistic on JJIF
+Read in data from sportdata and old sources (json) and display
+statistic on JJIF
+
+Names are mapped using:
+https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e
+force A and B as a CSR matrix.
+
+
 '''
 
 import datetime as dt
@@ -26,7 +33,7 @@ import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
 from datastore import DataStore
 
 # the supported age_divisions
-AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15", "Masters"]
+AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15", "Master"]
 # preselected age_divisions
 AGE_SEL = ["U16", "U18", "U21", "Adults"]
 
@@ -66,6 +73,7 @@ COLOR_MAP_AGE = {"Adults": 'rgb(243, 28, 43)',
                  "U18": 'rgb(211,211,211)',
                  "U16": 'rgb(105,105,105)',
                  "U14": 'rgb(255,255,255)'}
+
 
 def read_in_iso():
     ''' Read in file
@@ -443,7 +451,18 @@ else:
 
     # remove all categories which are not in key map and convert to hr name
     with st.expander("Show unsupported categories", expanded=False):
-        st.write(df_ini[~df_ini['category_id'].isin(key_map.keys())])
+        df_excluded = df_ini[~df_ini['category_id'].isin(key_map.keys())]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FRIENDSHIP"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("TEAM"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Team"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R2"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Final"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("DEMONSTRATION"))]
+        st.write(df_excluded)
+        #st.write(df_excluded['category_id'].unique())
+        st.write("There are : " +
+                 str(len(df_excluded['category_id'].unique()))
+                 + " categories not included")
     df_ini = df_ini[df_ini['category_id'].isin(key_map.keys())]
     df_ini['category_name'] = df_ini['category_id'].replace(key_map)
 
@@ -765,16 +784,26 @@ else:
 
     elif mode == 'World Games':
 
+        func_of = st.radio("Display:",
+                           ('Continent', 'Discipline'),
+                           horizontal=True)
+        if func_of == 'Discipline':
+            fuc_of_ty = 'cat_type'
+            col_sel = COLOR_MAP
+        else:
+            fuc_of_ty = 'continent'
+            col_sel = COLOR_MAP_CON
+
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
                       color='rank', text='name', title="Medals")
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
-        df_evts_plot = df_ini[['id', 'name', 'cat_type', 'age_division']].groupby(['id', 'cat_type', 'age_division']).count().reset_index()
+        df_evts_plot = df_ini[['id', 'name', fuc_of_ty]].groupby(['id', fuc_of_ty]).count().reset_index()
         df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
-        fig3 = px.bar(df_evts_plot, x="startDate", y='name', color="cat_type",
-                       color_discrete_map=COLOR_MAP)
+        fig3 = px.bar(df_evts_plot, x="startDate", y='name', color=fuc_of_ty,
+                       color_discrete_map=col_sel)
         st.plotly_chart(fig3)
 
     else:
