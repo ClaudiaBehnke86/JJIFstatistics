@@ -556,6 +556,7 @@ else:
 
     if mode == "Countries":
         country_sel = df_ini['country'].unique().tolist()
+        country_sel.sort()
         countryt_select = st.selectbox('Select the country',
                                        country_sel)
         if len(countryt_select) > 0:
@@ -764,7 +765,12 @@ else:
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
-                      color='rank', text='name', title="Medals")
+                      color='rank', text='name', title="Medals",
+                      labels={
+                     "country": "Country code",
+                     "name": "Number of Medals",
+                     "rank": "Place"
+                     })
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
@@ -773,16 +779,58 @@ else:
         # for individual events
         df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
         fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
-                                color="continent", title="JJNOs per category",
-                                color_discrete_map=COLOR_MAP_CON)
+                                color="continent", title="Athletes per category",
+                                color_discrete_map=COLOR_MAP_CON,
+                                labels={
+                                        "category_name": "Category Name",
+                                        "country": "Number of Athletes",
+                                        "country": "Continent"})
         fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
+
+        st.write("In total ", len(df_total['name'].unique()), "Athletes from",
+                 len(df_total['country'].unique()), "JJNOs")
         st.plotly_chart(fig_cats_jjnos)
+
+        left_column, right_column = st.columns(2)
+        with left_column:
+            df_cat = pd.DataFrame()
+            df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
+            df_cat['counts'] = df_ini['cat_type'].value_counts().values
+            fig1 = px.pie(df_cat, values='counts',
+                          names='cat_type', color='cat_type',
+                          title='Discipline distribution',
+                          color_discrete_map=COLOR_MAP)
+            fig1.update_layout(legend=dict(
+                               yanchor="top",
+                               y=0.99,
+                               xanchor="left",
+                               x=0.01))
+            st.plotly_chart(fig1, use_container_width=True)
+
+        with right_column:
+            df_gender = pd.DataFrame()
+            df_gender['gender'] = df_total['gender'].value_counts().index
+            df_gender['counts'] = df_total['gender'].value_counts().values
+            fig2 = px.pie(df_gender, values='counts', names='gender',
+                          color='gender',
+                          color_discrete_map={"Women": 'rgb(243, 28, 43)',
+                                              "Men": 'rgb(0,144,206)',
+                                              "Mixed": 'rgb(211,211,211)'},
+                          title='Gender distribution')
+            st.plotly_chart(fig2, use_container_width=True)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
-                      color='rank', text='name', title="Medals")
+                      color='rank', text='name', title="Medals",
+                      labels={
+                     "country": "Country code",
+                     "name": "Number of Medals",
+                     "rank": "Place"
+                     })
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
+        df_medal = df_medal[df_medal['rank'] < 4]
+        st.write("In total ", len(df_medal['country'].unique()), "JJNOs in medal tally")
 
     elif mode == 'World Games':
 
@@ -811,6 +859,12 @@ else:
     else:
 
         left_column, right_column = st.columns(2)
+
+        st.write("In total ", len(df_ini['name'].unique()), "Athletes from",
+                 str(countryt_select))
+        st.write("Currently", len(df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]), "Athletes active")
+
+
         with left_column:
             df_cat = pd.DataFrame()
             df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
@@ -841,16 +895,45 @@ else:
         df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
         fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type',
                         title="Time evolution of " + str(countryt_select) + " - Disciplines",
-                        color_discrete_map=COLOR_MAP)
+                        color_discrete_map=COLOR_MAP,
+                        labels={
+                                "dates": "Date [year]",
+                                "name": "Number of Athletes",
+                                "cat_type": "Discipline"
+                                }
+                        )
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
         df_timeev_age_cat = df_time[['dates', 'name', 'age_division']].groupby(['dates', 'age_division']).count().reset_index()
         fig1b = px.line(df_timeev_age_cat, x='dates', y='name', color='age_division',
                         title="Time evolution of " + str(countryt_select) + " - Age Divisions",
-                        color_discrete_map=COLOR_MAP_AGE)
+                        color_discrete_map=COLOR_MAP_AGE,
+                        labels={
+                                "dates": "Date [year]",
+                                "name": "Number of Athletes",
+                                "age_division": "Age Division"
+                                }
+                        )
         fig1b.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1b)
+
+        inner_join = pd.merge(df_ini,
+                              df_evts,
+                              on='id',
+                              how='inner')
+
+        df_medal = inner_join[['name_y', 'rank', 'name_x']].groupby(['name_y', 'rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='name_y', y='name_x',
+                      color='rank', text='name_x', title="Medals in Events",
+                      labels={
+                                "name_x": "Event Name",
+                                "name_y": "Number of Medals",
+                                "rank": "Place"
+                                }
+                      )
+        fig4.update_xaxes(categoryorder='total descending')
+        st.plotly_chart(fig4)
 
 
 st.sidebar.markdown('<a href="mailto:sportdirector@jjif.org">Contact for problems</a>', unsafe_allow_html=True)
