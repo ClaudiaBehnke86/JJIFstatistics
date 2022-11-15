@@ -571,8 +571,6 @@ else:
     df_max['leavingDate'] = df_max['leavingDate'] + pd.offsets.DateOffset(years=2)
     df_total = pd.merge(df_min, df_max)
 
-    st.write("in total ", len(df_total), "athletes")
-
     df_total['long_id'] = df_total['country'] + "_" + df_total['name'] + "_" +\
         df_total['category_name']
     df_total['gender'] = df_total['category_name']
@@ -663,14 +661,14 @@ else:
             fuc_of_ty = 'age_division'
             col_sel = COLOR_MAP_AGE
 
-
         df_timeev = df_time[['dates', 'name', fuc_of_ty]].groupby(['dates', fuc_of_ty]).count().reset_index()
         fig1 = px.area(df_timeev, x='dates', y='name', color=fuc_of_ty,
                        title="Time evolution of JJIF - Athletes (stacked))",
                        color_discrete_map=col_sel)
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
-
+        st.write("In total ", len(df_total), "Athletes")
+        st.write("Currently", len(df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]), "Athletes active")
         fig1a = px.line(df_timeev, x='dates', y='name', color=fuc_of_ty,
                         title="Time evolution of JJIF - Athletes",
                         color_discrete_map=col_sel)
@@ -683,6 +681,10 @@ else:
                        title="Time evolution of JJIF - JJNOs (stacked)",
                        color_discrete_map=col_sel)
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+        st.write("In total ", len(df_total['country'].unique()), "JJNOs")
+        df_jjnocur = df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]
+        st.write("Currently", len(df_jjnocur['country'].unique()), "JJNOs active")
+
         st.plotly_chart(fig0)
 
         df_timeev_jjnos_dis = df_time[['dates', 'country', fuc_of_ty]].groupby(['dates', fuc_of_ty]).nunique().reset_index()
