@@ -1,6 +1,7 @@
 id;country_code;name;eventtype;startDate
 TWG2001;JPN;The World Games 2001;World Games / Combat Games;16/08/2001
 TWG2005;GER;The World Games 2005;World Games / Combat Games;21/07/2005
+YWCh2007;GER;U21 & U18 World Championship;World Championship;04/10/2007
 WCh2008;SWE;World Championship 2008;World Championship;26/11/2008
 ECh2009;MNE;European Championship 2009;Continental Championship;04/06/2009
 TWG2009;TPE;The World Games 2009;World Games / Combat Games;21/07/2009
@@ -28,4 +29,3 @@ ACh2016;TKM;Asian Championship 2016;Continental Championship;09/12/2016
 YWCH2017;GRE;Youth World Championships 2017 Athens;World Championship;17/03/2017
 POp2017;FRA;Paris Open 2017;A Class Tournament;29/04/2017
 TWG2017;POL;The World Games 2017;World Games / Combat Games;28/07/2017
-YWCh2007;GER;U21 & U18 World Championship;World Championship;04/10/2007

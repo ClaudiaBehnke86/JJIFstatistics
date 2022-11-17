@@ -459,10 +459,10 @@ else:
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Final"))]
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("DEMONSTRATION"))]
         st.write(df_excluded)
-        #st.write(df_excluded['category_id'].unique())
-        st.write("There are : " +
-                 str(len(df_excluded['category_id'].unique()))
-                 + " categories not included")
+        if len(df_excluded['category_id'].unique()) > 0:
+            st.write("There are : " +
+                     str(len(df_excluded['category_id'].unique()))
+                     + " categories not included")
     df_ini = df_ini[df_ini['category_id'].isin(key_map.keys())]
     df_ini['category_name'] = df_ini['category_id'].replace(key_map)
 
