@@ -665,14 +665,24 @@ else:
         df_timeev = df_time[['dates', 'name', fuc_of_ty]].groupby(['dates', fuc_of_ty]).count().reset_index()
         fig1 = px.area(df_timeev, x='dates', y='name', color=fuc_of_ty,
                        title="Time evolution of JJIF - Athletes (stacked))",
-                       color_discrete_map=col_sel)
+                       color_discrete_map=col_sel,
+                       labels={
+                                "dates": "Date [year]",
+                                "name": "Number of Athletes"
+                                }
+                       )
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
         st.write("In total ", len(df_total), "Athletes")
         st.write("Currently", len(df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]), "Athletes active")
         fig1a = px.line(df_timeev, x='dates', y='name', color=fuc_of_ty,
                         title="Time evolution of JJIF - Athletes",
-                        color_discrete_map=col_sel)
+                        color_discrete_map=col_sel,
+                        labels={
+                                "dates": "Date [year]",
+                                "name": "Number of Athletes"
+                                }
+                        )
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
@@ -680,7 +690,10 @@ else:
         fig0 = px.area(df_timeev_jjnos, x='dates', y='country',
                        color=fuc_of_ty,
                        title="Time evolution of JJIF - JJNOs (stacked)",
-                       color_discrete_map=col_sel)
+                       color_discrete_map=col_sel,
+                       labels={"dates": "Date [year]",
+                               "name": "Number of JJNOs"}
+                       )
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.write("In total ", len(df_total['country'].unique()), "JJNOs")
         df_jjnocur = df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]
@@ -692,7 +705,12 @@ else:
         fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country',
                         color=fuc_of_ty,
                         title="Time evolution of JJIF - JJNOs",
-                        color_discrete_map=col_sel)
+                        color_discrete_map=col_sel,
+                        labels={
+                                "dates": "Date [year]",
+                                "name": "Number of JJNOs"
+                                }
+                        )
         fig0a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig0a)
 
@@ -705,14 +723,23 @@ else:
         fig_cats = px.bar(df_cats, x="category_name", y="name",
                           color="continent",
                           title="Athletes per category",
-                          color_discrete_map=COLOR_MAP_CON)
+                          color_discrete_map=COLOR_MAP_CON,
+                          labels={
+                                "category_name": "Category",
+                                "name": "Number of Athletes"
+                                }
+                          )
         fig_cats.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats)
 
         df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
         fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
                                 color="continent", title="JJNOs per category",
-                                color_discrete_map=COLOR_MAP_CON)
+                                color_discrete_map=COLOR_MAP_CON,
+                                labels={
+                                    "category_name": "Category",
+                                    "country": "Number of JJNOs"
+                                })
         fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats_jjnos)
 
@@ -760,7 +787,13 @@ else:
         fig3 = px.bar(df_age_dis, x="age_division", y="name",
                       color="cat_type", color_discrete_map=COLOR_MAP,
                       text='name', hover_data=["continent"],
-                      title="age_division and disciplines")
+                      title="age_division and disciplines",
+                      labels={
+                            "age_division": "Age Division",
+                            "name": "Number of Athletes",
+                            "cat_type": "Discipline"
+                             }
+                      )
         st.plotly_chart(fig3)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
