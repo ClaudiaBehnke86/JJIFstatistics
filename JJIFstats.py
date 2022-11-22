@@ -877,17 +877,39 @@ else:
             fuc_of_ty = 'continent'
             col_sel = COLOR_MAP_CON
 
-        df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
-        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
-                      color='rank', text='name', title="Medals")
-        fig4.update_xaxes(categoryorder='total descending')
-        st.plotly_chart(fig4)
-
+        st.write("In total ", len(df_total['name'].unique()), "Athletes from",
+                 len(df_total['country'].unique()), "JJNOs")
         df_evts_plot = df_ini[['id', 'name', fuc_of_ty]].groupby(['id', fuc_of_ty]).count().reset_index()
         df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
         fig3 = px.bar(df_evts_plot, x="startDate", y='name', color=fuc_of_ty,
-                       color_discrete_map=col_sel)
+                      color_discrete_map=col_sel,
+                      labels={
+                              "startDate": "Year of The World Games",
+                              "name": "Number of Athletes"
+                              })
         st.plotly_chart(fig3)
+
+        df_evts_plot_JJNOs = df_ini[['id', 'country', fuc_of_ty]].groupby(['id', fuc_of_ty]).nunique().reset_index()
+        df_evts_plot_JJNOs = df_evts_plot_JJNOs.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+        fig5 = px.bar(df_evts_plot_JJNOs, x="startDate", y='country', color=fuc_of_ty,
+                      color_discrete_map=col_sel,
+                      labels={
+                              "startDate": "Year of The World Games",
+                              "country": "Number of JJNOs"
+                              })
+        st.plotly_chart(fig5)
+
+        df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
+                      color='rank', text='name', title="Medals",
+                      labels={
+                     "country": "Country",
+                     "name": "Number of Medals",
+                     "rank": "Place"
+                     })
+        fig4.update_xaxes(categoryorder='total descending')
+        st.plotly_chart(fig4)
+        st.write("In total ", len(df_medal['country'].unique()), "JJNOs in medal tally")
 
     else:
 
