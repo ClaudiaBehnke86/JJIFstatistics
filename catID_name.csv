@@ -42,7 +42,7 @@ cat_id;name
 727;Adults Duo Mixed
 912;Adults Duo Mixed
 1492;Adults Duo Mixed
-16742;ADULTS DUO MIXED
+16742;Adults Duo Mixed
 4;Adults Duo Women
 723;Adults Duo Women
 726;Adults Duo Women
@@ -114,8 +114,8 @@ cat_id;name
 24;Adults Jiu-Jitsu Men p94 kg
 662;Adults Jiu-Jitsu Men p94 kg
 1479;Adults Jiu-Jitsu Men p94 kg
-16033;ADULTS JIU-JITSU NO-GI Women -45 KG
-16039;ADULTS JIU-JITSU NO-GI Men -56 KG
+16033;ADULTS Jiu-Jitsu NO-GI Women -45 KG
+16039;ADULTS Jiu-Jitsu NO-GI Men -56 KG
 565;Adults Jiu-Jitsu Women -45 kg
 1480;Adults Jiu-Jitsu Women -45 kg
 4150;Adults Jiu-Jitsu Women -45kg
@@ -142,9 +142,9 @@ cat_id;name
 667;Adults Jiu-Jitsu Women p70 kg
 1486;Adults Jiu-Jitsu Women p70 kg
 16743;Adults Fighting Men -94 kg
-1079;Adults Para Duo
-4370;Adults Para Duo
-4951;Adults Para Duo
+1079;Adults Para Duo Mixed
+4370;Adults Para Duo Mixed
+4951;Adults Para Duo Mixed
 1513;Adults Para Jiu-Jitsu Men -56 kg
 4359;Adults Para Jiu-Jitsu Men -56 kg
 349;Adults Para Jiu-Jitsu Men -62 kg
@@ -326,7 +326,7 @@ cat_id;name
 4241;U12 Jiu-Jitsu Women -44 kg
 4242;U12 Jiu-Jitsu Women -48 kg
 4243;U12 Jiu-Jitsu Women p48 kg
-16775;U12 JU-JITSU FIGHTING Men -30 kg -
+16775;U12 Fighting Men -30 kg -
 4247;U12 Show Men
 923;U12 Show Mixed
 4249;U12 Show Mixed
@@ -718,3 +718,39 @@ cat_id;name
 ;
 ;
 5653;Adults Jiu-Jitsu Women Open Weight
+5280;Master 1 Jiu-Jitsu Men +94 KG
+17088;Master 1 Fighting Men +94 KG
+17090;Master 1 Fighting Men -62 KG
+17091;Master 1 Fighting Men -69 KG
+17092;Master 1 Fighting Men -77 KG
+17093;Master 1 Fighting Men -85 KG
+17094;Master 1 Fighting Men -94 KG
+17219;Master 1 Show Mixed
+5286;Master 2 Jiu-Jitsu Men -85 KG
+5287;Master 2 Jiu-Jitsu Men -94 KG
+5565;Master 2 Jiu-Jitsu Women -57 KG
+17095;Master 2 Fighting Women +70 KG
+17102;Master 2 Fighting Men +94 KG
+17105;Master 2 Fighting Men -69 KG
+17106;Master 2 Fighting Men -77 KG
+17107;Master 2 Fighting Men -85 KG
+17108;Master 2 Fighting Men -94 KG
+17059;Master 3 Jiu-Jitsu Men +94 KG
+17063;Master 3 Jiu-Jitsu Men -69 KG
+17064;Master 3 Jiu-Jitsu Men -77 KG
+17066;Master 3 Jiu-Jitsu Men -94 KG
+17116;Master 3 Fighting Men +94 KG
+17119;Master 3 Fighting Men -69 KG
+17121;Master 3 Fighting Men -85 KG
+17077;Master 4 Jiu-Jitsu Men -69 KG
+17079;Master 4 Jiu-Jitsu Men -85 KG
+17080;Master 4 Jiu-Jitsu Men -94 KG
+17133;Master 4 Fighting Men -69 KG
+17136;Master 4 Fighting Men -94 KG
+17220;MasterS Fighting Men -69 KG
+17165;Para Duo Mixed
+17271;Para Jiu-Jitsu Men HEAVYWEIGHT
+17269;Para Jiu-Jitsu Men LIGHTWEIGHT
+17270;Para Jiu-Jitsu Men MIDDLEWEIGHT
+17267;Para Jiu-Jitsu Women 1
+17268;Para Jiu-Jitsu Women 2
