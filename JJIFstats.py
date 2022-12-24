@@ -110,7 +110,7 @@ def data_setting():
                      use_column_width='always')
     mode_in = st.sidebar.selectbox('Please select your mode',
                                    ('History', 'Single Event', 'Countries', 'World Games'))
-    dstart_in = st.sidebar.date_input("From", dt.date(2010, 1, 1))
+    dstart_in = st.sidebar.date_input("From", dt.date(2000, 1, 1))
     dend_in = st.sidebar.date_input("To", dt.date.today())
 
     age_select_in = st.sidebar.multiselect('Select the age divisions',
@@ -421,7 +421,6 @@ else:
     # cleanup of df
 
     df_ini = pd.concat(frames)
-
     df_ini['name'] = df_ini['name'].apply(lambda x: x.upper())
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
@@ -443,6 +442,7 @@ else:
     df_ini['name'].replace("É", "E", regex=True, inplace=True)
     df_ini['name'].replace("Ő", "O", regex=True, inplace=True)
     df_ini['name'].replace("Č", "C", regex=True, inplace=True)
+    df_ini['name'].replace("Ž", "Z", regex=True, inplace=True)
     df_ini['name'].replace("Ń", "N", regex=True, inplace=True)
     df_ini['name'].replace(",", " ", regex=True, inplace=True)
     df_ini['name'].replace("  ", " ", regex=True, inplace=True)
