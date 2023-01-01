@@ -401,7 +401,7 @@ age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_s
 
 if mode == "World Games":
     evtt = ["World Games / Combat Games"]
-    dstart = dt.date(2001, 1, 1)
+    dstart = dt.date(1997, 1, 1)
 
 
 df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
