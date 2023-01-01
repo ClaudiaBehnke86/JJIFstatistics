@@ -862,8 +862,7 @@ else:
                      })
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
-        df_medal = df_medal[df_medal['rank'] < 4]
-        st.write("In total ", len(df_medal['country'].unique()), "JJNOs in medal tally")
+        st.write("In total ", len(df_medal['country'][df_medal['rank'] < 4].unique()), "JJNOs in medal tally")
 
     elif mode == 'World Games':
 
@@ -909,7 +908,7 @@ else:
                      })
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
-        st.write("In total ", len(df_medal['country'].unique()), "JJNOs in medal tally")
+        st.write("In total ", len(df_medal['country'][df_medal['rank'] < 4].unique()), "JJNOs in medal tally")
 
     else:
 
@@ -918,7 +917,6 @@ else:
         st.write("In total ", len(df_ini['name'].unique()), "Athletes from",
                  str(countryt_select))
         st.write("Currently", len(df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]), "Athletes active")
-
 
         with left_column:
             df_cat = pd.DataFrame()
