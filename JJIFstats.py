@@ -732,7 +732,8 @@ else:
         fig_cats.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats)
 
-        st.write(df_total[['name', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).count().reset_index())
+        with st.expander("Show numbers "):
+            st.write(df_total[['name', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).count().reset_index())
 
         df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
         fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
@@ -745,8 +746,8 @@ else:
         fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats_jjnos)
 
-        st.write(df_total[['country', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).nunique().reset_index())
-
+        with st.expander("Show numbers "):
+            st.write(df_total[['country', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).nunique().reset_index())
 
         left_column, right_column = st.columns(2)
         with left_column:
@@ -800,7 +801,6 @@ else:
                              }
                       )
         st.plotly_chart(fig3)
-
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
