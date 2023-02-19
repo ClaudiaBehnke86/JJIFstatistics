@@ -1,36 +1,38 @@
 id;country_code;name;eventtype;startDate
-TWG2017;POL;The World Games 2017;World Games / Combat Games;28/07/2017
-POp2017;FRA;Paris Open 2017;A Class Tournament;29/04/2017
-YWCH2017;GRE;Youth World Championships 2017 Athens;World Championship;17/03/2017
-ACh2016;TKM;Asian Championship 2016;Continental Championship;09/12/2016
-WCh2016;POL;World Championship 2016;World Championship;25/11/2016
-SAO2016;COL;South American Open 2016;A Class Tournament;18/10/2016
-Go2016;GER;German Open 2016;A Class Tournament;24/09/2016
-BO2016;CYP;Balkan Open 2016;A Class Tournament;16/09/2016
-Pam2016;PAN;Pan American Championship 2016;Continental Championship;26/08/2016
-AFCH2016;RSA;African Championship 2016;Continental Championship;20/08/2016
-USO2016;USA;US Open 2016;A Class Tournament;09/07/2016
-EOC2016;BEL;European Open Championship 2016;A Class Tournament;04/06/2016
-POp2016;FRA;Paris Open 2016;A Class Tournament;30/04/2016
-YWCh2016;ESP;U21 World Championships 2016 Madrid;World Championship;18/03/2016
-WCh2015;THA;World Championship 2015;World Championship;23/11/2015
-ACh2015;RSA;African Championship 2015;Continental Championship;14/10/2015
-Go2015;GER;German Open 2015;A Class Tournament;02/10/2015
-WCh2014;FRA;World Championship 2014;World Championship;28/11/2014
-YWCH2013;ROU;Youth World Championships 2013;World Championship;22/11/2013
-TWG2013;COL;The World Games 2013;World Games / Combat Games;30/07/2013
-ECh2013;GER;EUROPEAN CHAMPIONSHIP 2013;Continental Championship;01/06/2013
-WCh2012;AUT;World Championship 2012;World Championship;30/11/2012
-WCh2011;COL;World Championship 2011;World Championship;14/10/2011
-WCh2010;RUS;World Championship 2011;World Championship;26/11/2010
-ACh2010;TUN;African Championship 2010;Continental Championship;20/03/2010
-PanAm2009;COL;PanAmerican Championship 2009;Continental Championship;04/09/2009
-TWG2009;TPE;The World Games 2009;World Games / Combat Games;21/07/2009
-ECh2009;MNE;European Championship 2009;Continental Championship;04/06/2009
-WCh2008;SWE;World Championship 2008;World Championship;26/11/2008
-YWCh2007;GER;U21 & U18 World Championship;World Championship;04/10/2007
-TWG2005;GER;The World Games 2005;World Games / Combat Games;21/07/2005
-TWG2001;JPN;The World Games 2001;World Games / Combat Games;16/08/2001
-TWG1997;FIN;The World Games 1997;World Games / Combat Games;07/08/1997
 WCh1996;FRA;World Championship 1996;World Championship;23/11/1996
+TWG1997;FIN;The World Games 1997;World Games / Combat Games;07/08/1997
 WCh1998;GER;World Championship 1998;World Championship;21/11/1998
+TWG2001;JPN;The World Games 2001;World Games / Combat Games;16/08/2001
+WCh2002;URU;World Championship 2004;World Championship;23/11/2002
+WCh2004;ESP;World Championship 2002;World Championship;26/11/2004
+TWG2005;GER;The World Games 2005;World Games / Combat Games;21/07/2005
+YWCh2007;GER;U21 & U18 World Championship;World Championship;04/10/2007
+WCh2008;SWE;World Championship 2008;World Championship;26/11/2008
+ECh2009;MNE;European Championship 2009;Continental Championship;04/06/2009
+TWG2009;TPE;The World Games 2009;World Games / Combat Games;21/07/2009
+PanAm2009;COL;PanAmerican Championship 2009;Continental Championship;04/09/2009
+ACh2010;TUN;African Championship 2010;Continental Championship;20/03/2010
+WCh2010;RUS;World Championship 2011;World Championship;26/11/2010
+WCh2011;COL;World Championship 2011;World Championship;14/10/2011
+WCh2012;AUT;World Championship 2012;World Championship;30/11/2012
+ECh2013;GER;EUROPEAN CHAMPIONSHIP 2013;Continental Championship;01/06/2013
+TWG2013;COL;The World Games 2013;World Games / Combat Games;30/07/2013
+YWCH2013;ROU;Youth World Championships 2013;World Championship;22/11/2013
+WCh2014;FRA;World Championship 2014;World Championship;28/11/2014
+Go2015;GER;German Open 2015;A Class Tournament;02/10/2015
+ACh2015;RSA;African Championship 2015;Continental Championship;14/10/2015
+WCh2015;THA;World Championship 2015;World Championship;23/11/2015
+YWCh2016;ESP;U21 World Championships 2016 Madrid;World Championship;18/03/2016
+POp2016;FRA;Paris Open 2016;A Class Tournament;30/04/2016
+EOC2016;BEL;European Open Championship 2016;A Class Tournament;04/06/2016
+USO2016;USA;US Open 2016;A Class Tournament;09/07/2016
+AFCH2016;RSA;African Championship 2016;Continental Championship;20/08/2016
+Pam2016;PAN;Pan American Championship 2016;Continental Championship;26/08/2016
+BO2016;CYP;Balkan Open 2016;A Class Tournament;16/09/2016
+Go2016;GER;German Open 2016;A Class Tournament;24/09/2016
+SAO2016;COL;South American Open 2016;A Class Tournament;18/10/2016
+WCh2016;POL;World Championship 2016;World Championship;25/11/2016
+ACh2016;TKM;Asian Championship 2016;Continental Championship;09/12/2016
+YWCH2017;GRE;Youth World Championships 2017 Athens;World Championship;17/03/2017
+POp2017;FRA;Paris Open 2017;A Class Tournament;29/04/2017
+TWG2017;POL;The World Games 2017;World Games / Combat Games;28/07/2017

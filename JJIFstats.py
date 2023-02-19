@@ -231,7 +231,7 @@ def update_events(df_evts_in, age_select_in, dis_select_in, cont_select_in, evtt
     return frames_merge
 
 
-@st.cache
+@st.cache_data
 def file_check(numb, user, password, user1, password1, data_url):
     '''
     runs over all files in event list and get them from
@@ -732,6 +732,8 @@ else:
         fig_cats.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats)
 
+        st.write(df_total[['name', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).count().reset_index())
+
         df_cats_jjnos = df_total[['country', 'category_name', 'cat_type', 'continent']].groupby(['category_name', 'cat_type', 'continent']).nunique().reset_index()
         fig_cats_jjnos = px.bar(df_cats_jjnos, x="category_name", y="country",
                                 color="continent", title="JJNOs per category",
@@ -742,6 +744,9 @@ else:
                                 })
         fig_cats_jjnos.update_layout(xaxis={'categoryorder': 'category ascending'})
         st.plotly_chart(fig_cats_jjnos)
+
+        st.write(df_total[['country', 'category_name', 'cat_type']].groupby(['category_name', 'cat_type']).nunique().reset_index())
+
 
         left_column, right_column = st.columns(2)
         with left_column:
@@ -795,6 +800,7 @@ else:
                              }
                       )
         st.plotly_chart(fig3)
+
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
@@ -909,6 +915,18 @@ else:
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
         st.write("In total ", len(df_medal['country'][df_medal['rank'] < 4].unique()), "JJNOs in medal tally")
+
+        df_map = pd.DataFrame()
+        df_map['country'] = df_total['country_code'].value_counts().index
+        df_map['counts'] = df_total['country_code'].value_counts().values
+        data = dict(type='choropleth',
+                    locations=df_map['country'], z=df_map['counts'])
+
+        layout = dict(title='Participating JJNOs',
+                      geo=dict(showframe=True,
+                               projection={'type': 'robinson'}))
+        x = pg.Figure(data=[data], layout=layout)
+        st.plotly_chart(x)
 
     else:
 
