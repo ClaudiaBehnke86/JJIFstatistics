@@ -173,7 +173,9 @@ def get_events(dstart_in, dend_in, evtt_select, user, password):
         ['id', 'country_code', 'name', 'eventtype', 'startDate']
     ]
 
-    df2 = df2.append(df_wg, ignore_index=True)
+    # df2 = df2.append(df_wg, ignore_index=True)
+    df2 = pd.concat([df2, df_wg])
+
     df2['startDate'] = pd.to_datetime(df2["startDate"]).dt.date
     df2 = df2[df2['startDate'].between(dstart_in, dend_in, inclusive=False)]
     df2 = df2[df2['eventtype'].isin(evtt_select)]
@@ -508,6 +510,7 @@ else:
             df_new.loc[:, 'name'] = df_new['name'].replace(dict_map)
 
             list_df_new.append(df_new)
+
             # if len(dict_map) > 0:
             #    print('fixing ' + str(len(dict_map)) + ' issues with names')
 
