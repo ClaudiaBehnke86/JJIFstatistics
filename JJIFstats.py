@@ -261,10 +261,21 @@ def file_check(numb, user, password, user1, password1, data_url):
         " " + data_url + numb + ".json > " + numb + ".json"
     os.system(db_string)
     d_in = {}
+
+    if numb == "20000006":
+        print("skip" + numb)
+        d_empt = {}
+        return d_empt
+    if numb == "WCh2017":
+        with open(numb+".json", "r", encoding="utf-8") as f_in:
+            d_in = json.load(f_in)
+            return d_in
+
     if os.stat(numb+".json").st_size > 256:
         with open(numb+".json", "r", encoding="utf-8") as f_in:
             d_in = json.load(f_in)
             return d_in
+
     # 2. sportdata API
     else:
         print("File " + numb + " does not appear to in local database. Try online")
@@ -400,6 +411,7 @@ IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
 age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_setting()
 
+
 if mode == "World Games":
     evtt = ["World Games / Combat Games"]
     dstart = dt.date(1997, 1, 1)
@@ -407,6 +419,9 @@ if mode == "World Games":
 
 df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
 evt_sel = df_evts['name'].unique()
+
+with st.expander("Details of events"):
+    st.write(df_evts)
 
 if mode == 'Single Event':
     evtt_select = st.selectbox("Select the event:",
@@ -516,9 +531,13 @@ else:
     # overwrite existing df_ini with events with name issues fixed
     df_ini = pd.concat(list_df_new)
 
+    # convert neutral athletes into Liechtenstein
+    # (make sure to change if we ever have a JJNO there)
+    df_ini["country_code"].replace("JJIF", "LIE", regex=True, inplace=True)
+    df_ini["country_code"].replace("JIF", "LIE", regex=True, inplace=True)
+
     # replace wrong country codes and make all ISO
     df_ini["country_code"].replace("RJF", "RUS", regex=True, inplace=True)
-    df_ini["country_code"].replace("JIF", "LIE", regex=True, inplace=True)
     df_ini["country_code"].replace("ENG", "GBR", regex=True, inplace=True)
     df_ini['country_code'] = df_ini['country_code'].replace(IOC_ISO)
     df_ini['continent'] = df_ini['country_code'].apply(
@@ -566,6 +585,7 @@ else:
 
     df_par = df_ini.copy()
     df_par = df_par.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+
     df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
     df_min.rename(columns={"startDate": "entryDate"}, inplace=True)
 
@@ -666,7 +686,7 @@ else:
 
         df_timeev = df_time[['dates', 'name', fuc_of_ty]].groupby(['dates', fuc_of_ty]).count().reset_index()
         fig1 = px.area(df_timeev, x='dates', y='name', color=fuc_of_ty,
-                       title="Time evolution of JJIF - Athletes (stacked))",
+                       title="Time evolution of JJIF - Athletes (stacked)",
                        color_discrete_map=col_sel,
                        labels={
                                 "dates": "Date [year]",
@@ -805,6 +825,8 @@ else:
         st.plotly_chart(fig3)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        # move Liechtenstein back to JJIF
+        df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
                       color='rank', text='name', title="Medals",
                       labels={
@@ -861,6 +883,8 @@ else:
             st.plotly_chart(fig2, use_container_width=True)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        # move Liechtenstein back to JJIF
+        df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
                       color='rank', text='name', title="Medals",
                       labels={
@@ -907,6 +931,8 @@ else:
         st.plotly_chart(fig5)
 
         df_medal = df_ini[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
+        # move Liechtenstein back to JJIF
+        df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
                       color='rank', text='name', title="Medals",
                       labels={
@@ -997,6 +1023,8 @@ else:
                               how='inner')
 
         df_medal = inner_join[['name_y', 'rank', 'name_x']].groupby(['name_y', 'rank']).count().reset_index()
+        # move Liechtenstein back to JJIF
+        df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='name_y', y='name_x',
                       color='rank', text='name_x', title="Medals in Events",
                       labels={
