@@ -854,6 +854,11 @@ else:
                  len(df_total['country'].unique()), "JJNOs")
         st.plotly_chart(fig_cats_jjnos)
 
+        df_numb_cat = df_total[['country', 'category_name']].groupby(['category_name']).nunique().reset_index()
+
+        with st.expander("Show numbers"):
+            df_numb_cat
+
         left_column, right_column = st.columns(2)
         with left_column:
             df_cat = pd.DataFrame()
