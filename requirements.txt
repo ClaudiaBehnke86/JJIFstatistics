@@ -1,8 +1,8 @@
 numpy
 pandas
 plotly
-streamlit
-scikit-learn
+streamlit>= 1.9.2
 pycountry_convert
 scipy
 sparse_dot_topn
+scikit-learn
