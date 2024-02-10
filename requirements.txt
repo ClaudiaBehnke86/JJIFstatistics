@@ -4,5 +4,5 @@ plotly
 streamlit>= 1.9.2
 pycountry_convert
 scipy
-sparse_dot_topn
+sparse_dot_topn==0.3.6
 scikit-learn
