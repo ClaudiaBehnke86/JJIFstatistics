@@ -91,10 +91,10 @@ def read_in_iso():
 def read_in_catkey():
     ''' Read in file
      - HELPER FUNCTION
-     Reads in a csv  and convert catergory ids to catergoy names
+     Reads in a csv  and convert category ids to category names
 
     '''
-    inp_file = pd.read_csv("catID_name.csv", sep=';')
+    inp_file = pd.read_csv('https://raw.githubusercontent.com/ClaudiaBehnke86/JJIFsupportFiles/main/catID_name.csv', sep=';')
     key_map_inp = inp_file[
         ['cat_id', 'name']
     ].set_index('cat_id').to_dict()['name']
@@ -472,7 +472,9 @@ else:
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("TEAM"))]
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Team"))]
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R2"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R5"))]
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Final"))]
+        df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FINAL"))]
         df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("DEMONSTRATION"))]
         st.write(df_excluded)
         if len(df_excluded['category_id'].unique()) > 0:
@@ -557,7 +559,8 @@ else:
 
     # String comparison does not handle + well... replaced with p in csv
     # and here replaced back
-    df_ini['category_name'].replace("p", "+", regex=True, inplace=True)
+    df_ini['category_name'].replace(" p", " +", regex=True, inplace=True)
+
     df_ini['cat_type'] = df_ini['category_name']
     df_ini['cat_type'] = conv_to_type(df_ini, 'cat_type', DIS_INP)
 
@@ -603,6 +606,8 @@ else:
                              other="Women", inplace=True)
     df_total['gender'].where(~(df_total['gender'].str.contains("Mixed")),
                              other="Mixed", inplace=True)
+    df_total['gender'].where(~(df_total['gender'].str.contains("Open")),
+                             other="Open", inplace=True)
 
     # convert country names to codes and check continents
     df_total['country_code'] = df_total['country'].apply(lambda x: pc.country_name_to_country_alpha2(x))
@@ -795,7 +800,8 @@ else:
                           color='gender',
                           color_discrete_map={"Women": 'rgb(243, 28, 43)',
                                               "Men": 'rgb(0,144,206)',
-                                              "Mixed": 'rgb(211,211,211)'},
+                                              "Mixed": 'rgb(211,211,211)',
+                                              "Open": 'rgb(105,105,105)'},
                           title='Gender distribution')
             st.plotly_chart(fig2, use_container_width=True)
 
