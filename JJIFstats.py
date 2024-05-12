@@ -537,13 +537,14 @@ else:
     # (make sure to change if we ever have a JJNO there)
     df_ini["country_code"].replace("JJIF", "LIE", regex=True, inplace=True)
     df_ini["country_code"].replace("JIF", "LIE", regex=True, inplace=True)
+    df_ini["country_code"].replace("AIN", "LIE", regex=True, inplace=True)
 
     # replace wrong country codes and make all ISO
     df_ini["country_code"].replace("RJF", "RUS", regex=True, inplace=True)
     df_ini["country_code"].replace("ENG", "GBR", regex=True, inplace=True)
     df_ini['country_code'] = df_ini['country_code'].replace(IOC_ISO)
     df_ini['continent'] = df_ini['country_code'].apply(
-                          lambda x: pc.country_alpha2_to_continent_code(x))
+                              lambda x: pc.country_alpha2_to_continent_code(x))
     df_ini['country'] = df_ini['country_code'].apply(
                         lambda x: pc.country_alpha2_to_country_name(x))
     df_ini['country_code'] = df_ini['country_code'].apply(
