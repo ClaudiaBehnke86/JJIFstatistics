@@ -74,6 +74,12 @@ COLOR_MAP_AGE = {"Adults": 'rgb(243, 28, 43)',
                  "U16": 'rgb(105,105,105)',
                  "U14": 'rgb(255,255,255)'}
 
+COLOR_MAP_ETYPE = {"World Championship": 'rgb(243, 28, 43)',
+                   "Continental Championship": 'rgb(0,144,206)',
+                   "A Class Tournament": 'rgb(211,211,211)',
+                   "B Class Tournament": 'rgb(105,105,105)',
+                   "World Games / Combat Games": 'rgb(255,255,255)'}
+
 
 def read_in_iso():
     ''' Read in file
@@ -109,7 +115,7 @@ def data_setting():
     st.sidebar.image("https://i0.wp.com/jjeu.eu/wp-content/uploads/2018/08/jjif-logo-170.png?fit=222%2C160&ssl=1",
                      use_column_width='always')
     mode_in = st.sidebar.selectbox('Please select your mode',
-                                   ('History', 'Single Event', 'Countries', 'World Games'))
+                                   ('History', 'Single Event', 'Countries', 'World Games' , 'Events Overview'))
     dstart_in = st.sidebar.date_input("From", dt.date(2000, 1, 1))
     dend_in = st.sidebar.date_input("To", dt.date.today())
 
@@ -674,8 +680,51 @@ else:
     df_time['continent'].where(~(df_time['continent'].str.contains("North America")),
                                other="Pan America", inplace=True)
 
+    # add number of participants to df_evnet
+    df_evt_part = df_ini[['id', 'name']].groupby(['id']).count().reset_index()
+    df_evt_part = df_evt_part.rename(columns={'name': 'no participants'})
+    df_evts = pd.merge(df_evts, df_evt_part, on='id', how='outer')
+
     # start graphics here
-    if mode == 'History':
+    if mode == 'Events Overview':
+
+        df_evts['country_code'] = df_evts['country_code'].replace(IOC_ISO)
+        df_evts['country_code'] = df_evts['country_code'].apply(lambda x: pc.country_alpha2_to_country_name(x))
+        df_evts['country_code'] = df_evts['country_code'].apply(lambda x: pc.country_name_to_country_alpha3(x))
+
+        st.write(df_evts)
+
+        df_dip_evts = df_evts[['name', 'startDate', 'no participants','eventtype','country_code']]
+        fig1 = px.bar(df_dip_evts, x='startDate', y='no participants', color='eventtype',
+                       hover_data=['startDate', 'name', 'no participants','country_code'],
+                       title="Events per year",
+                       color_discrete_map=COLOR_MAP_ETYPE,
+                       labels={
+                                "dates": "Date [year]",
+                                "name": "Name of event"
+                                }
+                       )
+        fig1.update_layout(xaxis_range=[df_dip_evts['startDate'].min(), dend])
+        fig1.update_traces(width=1204800000)
+        st.plotly_chart(fig1)
+
+        df_map1 = pd.DataFrame()
+        df_map1['country'] = df_evts['country_code'].value_counts().index
+        df_map1['counts'] = df_evts['country_code'].value_counts().values
+
+        data = dict(type='choropleth',
+                    locations=df_map1['country'], z=df_map1['counts'])
+
+        layout = dict(title='Organised Events',
+                      geo=dict(showframe=True,
+                               projection={'type': 'robinson'}))
+        x = pg.Figure(data=[data], layout=layout)
+        x.update_geos(
+                showcountries=True, countrycolor="black"
+        )
+        st.plotly_chart(x)
+
+    elif mode == 'History':
 
         func_of = st.radio("Display time evolution for:",
                            ('Continent', 'Discipline', 'Age Divisions'),
