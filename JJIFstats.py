@@ -56,8 +56,9 @@ EVENT_TYPE_SEL = ['Continental Championship',
                   'B Class Tournament',
                   'World Games / Combat Games']
 
-COLOR_MAP = {"Jiu-Jitsu": 'rgb(243, 28, 43)',
-             "Fighting": 'rgb(0,144,206)',
+# some dicts to map colors in plotly graphs
+COLOR_MAP = {"Jiu-Jitsu": 'rgb(243, 28, 43)',# red
+             "Fighting": 'rgb(0,144,206)',# blue
              "Duo": 'rgb(211,211,211)',
              "Show": 'rgb(105,105,105)',
              "Contact": 'rgb(255,255,255)'}

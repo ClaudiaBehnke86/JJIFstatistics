@@ -1,14 +1,16 @@
 id;country_code;name;eventtype;startDate
 WCh1996;FRA;World Championship 1996;World Championship;1996-11-23
 TWG1997;FIN;The World Games 1997;World Games / Combat Games;1997-08-07
-WCh1998;GER;World Championship 1998;World Championship;1998-11-21
-WCh1998;GER;JU-JITSU WORLD CHAMPIONSHIP 1998;World Championship;1998-11-22
-ECh2001;ITA;Ju-Jitsu European Championship Genua/Italy 2001;Continental Championship;2001-05-01
+WCh1998;GER;World Championship 1998 (Medals only);World Championship;1998-11-21
+ECH2001;ITA;European Championship Genua/Italy 2001 (Medals Only);Continental Championship;2001-05-01
 TWG2001;JPN;The World Games 2001;World Games / Combat Games;2001-08-16
-WCh2002;URU;World Championship 2004;World Championship;2002-11-23
-WCh2004;ESP;World Championship 2002;World Championship;2004-11-26
+WCh2002;URU;World Championship 2002 (Medals only);World Championship;2002-11-23
+WCh2004;ESP;World Championship 2004 (Medals Only);World Championship;2004-11-26
+YWCH2005;GER;1st Youth World Championship 2005;World Championship;2005-10-01
 TWG2005;GER;The World Games 2005;World Games / Combat Games;2005-07-21
-WCH2006;NED;Results World Championship 2006 Rotterdam ;World Championship;2006-11-01
+ASCH2006;KAZ;Asian Championship in Almaty;Continental Championship;2006-11-06
+EOC2006;GER;Europacup 2026 - Meiningen Germany;A Class Tournament;2006-06-01
+WCH2006;NED;World Championship 2006 Rotterdam (Medals Only);World Championship;2006-11-01
 YWCh2007;GER;U21 & U18 World Championship;World Championship;2007-10-04
 YECH2008;SLO;European Championship Junior and Aspirant Maribor 2008;Continental Championship;2008-05-01
 WCh2008;SWE;World Championship 2008;World Championship;2008-11-26
@@ -19,14 +21,17 @@ YWCH2009;GRE;World Championship for Juniors and Aspirants in Athens/ Greece;Worl
 ACh2010;TUN;African Championship 2010;Continental Championship;2010-03-20
 YECH2010;AUT;European Championship 2010 - Vienna (Juniors/Aspirants);Continental Championship;2010-05-28
 CG2010;CHN;Sportaccord Combat Games 2010 Ju-Jitsu Beijing;World Games / Combat Games;2010-08-18
+GO2010;GER;German Open 2010;A Class Tournament;2010-10-03
 BAO2010;SRB;7th JU-JITSU BALKAN CHAMPIONSHIP;A Class Tournament;2010-09-24
 WCh2010;RUS;World Championship 2011;World Championship;2010-11-26
-ECH2011;SLO;European Championships 2011 Maribor Slovenia;Continental Championship;2011-06-03
-BAO2011;ROU;8th Balkan Open Championship 2011;B Class Tournament;2011-09-25
+ECh2011;SLO;European Championships 2011 Maribor Slovenia;Continental Championship;2011-06-03
+BO2011;ROU;8th Balkan Open Championship 2011;B Class Tournament;2011-09-25
+GO2011;GER;German Open 2011;A Class Tournament;2011-10-01
 WCh2011;COL;World Championship 2011;World Championship;2011-10-14
-YWCh2011;BEL;World Championship Youth 2011 - Ghent (BEL);World Championship;2011-11-11
+YWCh2011a;BEL;World Championship Youth 2011 - Ghent (BEL);World Championship;2011-11-11
 YECH2012;ITA;European Championship Juniors and Aspirants Genova/ Italy;Continental Championship;2012-05-13
-BAO2012;GRE;Balkan Open Grand Slam 2012;A Class Tournament;2012-10-14
+BO2012;GRE;Balkan Open Grand Slam 2012;A Class Tournament;2012-10-14
+GO2012;GER;German Open 2012;A Class Tournament;2012-10-03
 ACH2012;SEN;2nd African Ju-Jitsu Championship;Continental Championship;2012-11-10
 WCh2012;AUT;World Championship 2012;World Championship;2012-11-30
 ECh2013;GER;EUROPEAN CHAMPIONSHIP 2013;Continental Championship;2013-06-01
