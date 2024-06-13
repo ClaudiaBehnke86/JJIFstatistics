@@ -1,18 +1,28 @@
 id;country_code;name;eventtype;startDate
-WCh1996;FRA;World Championship 1996;World Championship;1996-11-23
+WCh1996;FRA;World Championship 1996 (Medals Only);World Championship;1996-11-23
 TWG1997;FIN;The World Games 1997;World Games / Combat Games;1997-08-07
 WCh1998;GER;World Championship 1998 (Medals only);World Championship;1998-11-21
+WCh2000;DEN;World Championship 2000 (Medals only) Copenhagen;World Championship;2000-11-25
 ECH2001;ITA;European Championship Genua/Italy 2001 (Medals Only);Continental Championship;2001-05-01
 TWG2001;JPN;The World Games 2001;World Games / Combat Games;2001-08-16
 WCh2002;URU;World Championship 2002 (Medals only);World Championship;2002-11-23
+ECH2003;GER;European Championship Hanau/Germany  2003 (Medals only);Continental Championship;2003-06-07
+GO2003;GER;German Open 2003 (Medals only);A Class Tournament;2003-11-08
+GO2004;GER;German Open 2004;A Class Tournament;2004-10-02
 WCh2004;ESP;World Championship 2004 (Medals Only);World Championship;2004-11-26
-YWCH2005;GER;1st Youth World Championship 2005;World Championship;2005-10-01
+ECh2005;POL;European Championship 2005 (Medals Only);Continental Championship;2005-06-01
 TWG2005;GER;The World Games 2005;World Games / Combat Games;2005-07-21
-ASCH2006;KAZ;Asian Championship in Almaty;Continental Championship;2006-11-06
+GO2005;GER;German Open 2005;A Class Tournament;2005-10-01
+YWCH2005;GER;1st Youth World Championship 2005;World Championship;2005-10-01
 EOC2006;GER;Europacup 2026 - Meiningen Germany;A Class Tournament;2006-06-01
-WCH2006;NED;World Championship 2006 Rotterdam (Medals Only);World Championship;2006-11-01
+GO2006;GER;German Open 2006;A Class Tournament;2006-09-30
+WCH2006;NED;World Championship 2006  (Medals Only) Rotterdam;World Championship;2006-11-01
+ASCH2006;KAZ;Asian Championship in Almaty;Continental Championship;2006-11-06
+ECH2007;ITA;European Championship 2007 (Medals Only) Tourino ;Continental Championship;2007-06-01
 YWCh2007;GER;U21 & U18 World Championship;World Championship;2007-10-04
+GO2007;GER;German Open 2007;A Class Tournament;2007-10-06
 YECH2008;SLO;European Championship Junior and Aspirant Maribor 2008;Continental Championship;2008-05-01
+GO2008;GER;German Open 2008 (only Fighting);A Class Tournament;2008-10-04
 WCh2008;SWE;World Championship 2008;World Championship;2008-11-26
 ECh2009;MNE;European Championship 2009;Continental Championship;2009-06-04
 TWG2009;TPE;The World Games 2009;World Games / Combat Games;2009-07-21
@@ -21,8 +31,8 @@ YWCH2009;GRE;World Championship for Juniors and Aspirants in Athens/ Greece;Worl
 ACh2010;TUN;African Championship 2010;Continental Championship;2010-03-20
 YECH2010;AUT;European Championship 2010 - Vienna (Juniors/Aspirants);Continental Championship;2010-05-28
 CG2010;CHN;Sportaccord Combat Games 2010 Ju-Jitsu Beijing;World Games / Combat Games;2010-08-18
-GO2010;GER;German Open 2010;A Class Tournament;2010-10-03
 BAO2010;SRB;7th JU-JITSU BALKAN CHAMPIONSHIP;A Class Tournament;2010-09-24
+GO2010;GER;German Open 2010;A Class Tournament;2010-10-03
 WCh2010;RUS;World Championship 2011;World Championship;2010-11-26
 ECh2011;SLO;European Championships 2011 Maribor Slovenia;Continental Championship;2011-06-03
 BO2011;ROU;8th Balkan Open Championship 2011;B Class Tournament;2011-09-25
@@ -30,8 +40,8 @@ GO2011;GER;German Open 2011;A Class Tournament;2011-10-01
 WCh2011;COL;World Championship 2011;World Championship;2011-10-14
 YWCh2011a;BEL;World Championship Youth 2011 - Ghent (BEL);World Championship;2011-11-11
 YECH2012;ITA;European Championship Juniors and Aspirants Genova/ Italy;Continental Championship;2012-05-13
-BO2012;GRE;Balkan Open Grand Slam 2012;A Class Tournament;2012-10-14
 GO2012;GER;German Open 2012;A Class Tournament;2012-10-03
+BO2012;GRE;Balkan Open Grand Slam 2012;A Class Tournament;2012-10-14
 ACH2012;SEN;2nd African Ju-Jitsu Championship;Continental Championship;2012-11-10
 WCh2012;AUT;World Championship 2012;World Championship;2012-11-30
 ECh2013;GER;EUROPEAN CHAMPIONSHIP 2013;Continental Championship;2013-06-01
@@ -51,13 +61,13 @@ AFO2014;TUN;African Open;A Class Tournament;2014-08-23
 BO2014;ROU;Balkan Open 2014 & Cadets (U15) WORLD CUP;A Class Tournament;2014-09-26
 SAO2014;BOL;JU JITSU SOUTH AMERICAN OPEN 2014;A Class Tournament;2014-10-03
 Go2014;GER;German Open 2014;A Class Tournament;2014-10-04
-UAO2015;USA;2015 US Open - Las Vegas / Nevada-USA;A Class Tournament;2015-07-08
 WCh2014;FRA;World Championship 2014;World Championship;2014-11-28
 THO2015;THA;Regional Championship East-Asia & South-East Asia;A Class Tournament;2015-02-26
 YWCH2015;GRE;World Championship for Juniors and Aspirants (U18 U21) 2015;World Championship;2015-03-13
 MO2015;TUN;International Open of Maghreb Union Ju-Jitsu;A Class Tournament;2015-04-11
 POp2015;FRA;Paris Open 2015;A Class Tournament;2015-05-02
 ECh2015;NED;European Championship in Duo / Fighting / Ne-Waza for seniors -Almere (NED);Continental Championship;2015-07-06
+UAO2015;USA;2015 US Open - Las Vegas / Nevada-USA;A Class Tournament;2015-07-08
 Pam2015;COL;Pan-American Championship 2015;Continental Championship;2015-08-27
 BO2015;BIH;World Cup U15 & Balkan Open;A Class Tournament;2015-09-26
 Go2015;GER;German Open 2015;A Class Tournament;2015-10-02

@@ -116,8 +116,8 @@ def data_setting():
     st.sidebar.image("https://i0.wp.com/jjeu.eu/wp-content/uploads/2018/08/jjif-logo-170.png?fit=222%2C160&ssl=1",
                      use_column_width='always')
     mode_in = st.sidebar.selectbox('Please select your mode',
-                                   ('History', 'Single Event', 'Countries', 'World Games' , 'Events Overview'))
-    dstart_in = st.sidebar.date_input("From", dt.date(2000, 1, 1))
+                                   ('History', 'Single Event', 'Countries', 'World Games' , 'Events Overview & Animations'))
+    dstart_in = st.sidebar.date_input("From", dt.date(2003, 1, 2))
     dend_in = st.sidebar.date_input("To", dt.date.today())
 
     age_select_in = st.sidebar.multiselect('Select the age divisions',
@@ -424,6 +424,9 @@ if mode == "World Games":
     dstart = dt.date(1997, 1, 1)
 
 
+if dstart < dt.date(2003, 1, 1):
+    st.warning("Old data only contains medals and not total results",  icon="⚠️")
+
 df_evts = get_events(dstart, dend, evtt, st.secrets['user'], st.secrets['password'])
 evt_sel = df_evts['name'].unique()
 
@@ -681,13 +684,29 @@ else:
     df_time['continent'].where(~(df_time['continent'].str.contains("North America")),
                                other="Pan America", inplace=True)
 
-    # add number of participants to df_evnet
+    # convert all into monthly rolling number to remove spikes
+    # create list with monthly steps
+    list_month = pd.date_range(start=dstart, end=dend, freq='MS').tolist()
+
+    # create empty temporary list
+    list_df_new = []
+    # adding column name to the respective columns
+    for i, val in enumerate(list_month[:-1]):
+
+        # make a new df with all names which have start date and end data
+        df_month = df_total[(df_total['entryDate'] <= val) & (df_total['leavingDate'] >= list_month[i+1])]
+        df_month['month'] = val
+
+        list_df_new.append(df_month)
+    df_time_smooth = pd.concat(list_df_new)
+
+    # add number of participants to df_event
     df_evt_part = df_ini[['id', 'name']].groupby(['id']).count().reset_index()
     df_evt_part = df_evt_part.rename(columns={'name': 'no participants'})
     df_evts = pd.merge(df_evts, df_evt_part, on='id', how='outer')
 
     # start graphics here
-    if mode == 'Events Overview':
+    if mode == 'Events Overview & Animations':
 
         df_evts['country_code'] = df_evts['country_code'].replace(IOC_ISO)
         df_evts['country_code'] = df_evts['country_code'].apply(lambda x: pc.country_alpha2_to_country_name(x))
@@ -725,6 +744,83 @@ else:
         )
         st.plotly_chart(x)
 
+        # some animation of the nations with the most participants
+        # only adults
+        df_time_smooth1 = df_time_smooth[df_time_smooth['age_division'] == "Adults"]
+        df_animated_bar = df_time_smooth1[['month', 'country', 'name', 'continent']].groupby(['month', 'country', 'continent']).count().reset_index()
+
+        # some bug in plotly does not show all colors if they are no in the first frame.
+        # https://github.com/plotly/plotly.py/issues/2259
+        # workaround: Add "fake data for first frame:
+        fake_africa = {'month': df_animated_bar['month'].min(), 'country': ' ', 'continent': 'Africa', 'name': 0}
+        df_animated_bar.loc[len(df_animated_bar)] = fake_africa
+
+        fake_asia = {'month': df_animated_bar['month'].min(), 'country': ' ', 'continent': 'Asia', 'name': 0}
+        df_animated_bar.loc[len(df_animated_bar)] = fake_asia
+
+        fake_panam = {'month': df_animated_bar['month'].min(), 'country': ' ', 'continent': 'Pan America', 'name': 0}
+        df_animated_bar.loc[len(df_animated_bar)] = fake_panam
+
+        fake_oceania = {'month': df_animated_bar['month'].min(), 'country': ' ', 'continent': 'Oceania', 'name': 0}
+        df_animated_bar.loc[len(df_animated_bar)] = fake_oceania
+
+        figan = px.bar(df_animated_bar,
+                       y='country',
+                       x='name',
+                       color='continent',
+                       color_discrete_map=COLOR_MAP_CON,
+                       animation_frame=df_animated_bar.month.astype(str),
+                       orientation='h',
+                       text='country',
+                       title="Largest number of participants (only Adults, all disciplines)",
+                       labels={
+                                "month": "Date [year]",
+                                "name": "Number of Athletes"
+                                })
+
+        figan.layout.updatemenus[0].buttons[0]['args'][1]['frame']['duration'] = 300
+
+        figan.update_yaxes(visible=False)
+        figan.update_yaxes(categoryorder='total descending')
+        figan.update_yaxes(range=(-.5, 9.5))
+        st.plotly_chart(figan)
+
+        # largest categories
+        df_animated_bar_cat = df_time_smooth[['month', 'category_name', 'name', 'cat_type']].groupby(['month', 'category_name', 'cat_type']).count().reset_index()
+
+        # some bug in plotly does not show all colors if they are no in the first frame.
+        # https://github.com/plotly/plotly.py/issues/2259
+        # workaround: Add "fake data for first frame:
+        fake_jiu = {'month': df_animated_bar_cat['month'].min(), 'category_name': ' ', 'cat_type': 'Jiu-Jitsu', 'name': 0}
+        df_animated_bar_cat.loc[len(df_animated_bar_cat)] = fake_jiu
+
+        fake_show = {'month': df_animated_bar_cat['month'].min(), 'category_name': ' ', 'cat_type': 'Show', 'name': 0}
+        df_animated_bar_cat.loc[len(df_animated_bar_cat)] = fake_show
+
+        fake_duo = {'month': df_animated_bar_cat['month'].min(), 'category_name': ' ', 'cat_type': 'Duo', 'name': 0}
+        df_animated_bar_cat.loc[len(df_animated_bar_cat)] = fake_duo
+
+        figan1 = px.bar(df_animated_bar_cat,
+                        y='category_name',
+                        x='name',
+                        color='cat_type',
+                        color_discrete_map=COLOR_MAP,
+                        animation_frame=df_animated_bar_cat.month.astype(str),
+                        orientation='h',
+                        text='category_name',
+                        title="Largest number of participants in category",
+                        labels={
+                                "month": "Date [year]",
+                                "name": "Number of Athletes"
+                                })
+
+        figan1.layout.updatemenus[0].buttons[0]['args'][1]['frame']['duration'] = 300
+
+        figan1.update_yaxes(visible=False)
+        figan1.update_yaxes(categoryorder='total descending')
+        figan.update_yaxes(range=(-.5, 9.5))
+        st.plotly_chart(figan1)
+
     elif mode == 'History':
 
         func_of = st.radio("Display time evolution for:",
@@ -740,36 +836,38 @@ else:
             fuc_of_ty = 'age_division'
             col_sel = COLOR_MAP_AGE
 
-        df_timeev = df_time[['dates', 'name', fuc_of_ty]].groupby(['dates', fuc_of_ty]).count().reset_index()
-        fig1 = px.area(df_timeev, x='dates', y='name', color=fuc_of_ty,
+        # static time evolution
+        df_timeev = df_time_smooth[['month', 'name', fuc_of_ty]].groupby(['month', fuc_of_ty]).count().reset_index()
+        fig1 = px.area(df_timeev, x='month', y='name', color=fuc_of_ty,
                        title="Time evolution of JJIF - Athletes (stacked)",
                        color_discrete_map=col_sel,
                        labels={
-                                "dates": "Date [year]",
+                                "month": "Date [year]",
                                 "name": "Number of Athletes"
                                 }
                        )
         fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1)
+
         st.write("In total ", len(df_total), "Athletes")
         st.write("Currently", len(df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]), "Athletes active")
-        fig1a = px.line(df_timeev, x='dates', y='name', color=fuc_of_ty,
+        fig1a = px.line(df_timeev, x='month', y='name', color=fuc_of_ty,
                         title="Time evolution of JJIF - Athletes",
                         color_discrete_map=col_sel,
                         labels={
-                                "dates": "Date [year]",
+                                "month": "Date [year]",
                                 "name": "Number of Athletes"
                                 }
                         )
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
-        df_timeev_jjnos = df_time[['dates', 'country', fuc_of_ty]].groupby(['dates', fuc_of_ty]).nunique().reset_index()
-        fig0 = px.area(df_timeev_jjnos, x='dates', y='country',
+        df_timeev_jjnos = df_time_smooth[['month', 'country', fuc_of_ty]].groupby(['month', fuc_of_ty]).nunique().reset_index()
+        fig0 = px.area(df_timeev_jjnos, x='month', y='country',
                        color=fuc_of_ty,
                        title="Time evolution of JJIF - JJNOs (stacked)",
                        color_discrete_map=col_sel,
-                       labels={"dates": "Date [year]",
+                       labels={"month": "Date [year]",
                                "name": "Number of JJNOs"}
                        )
         fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
@@ -779,13 +877,13 @@ else:
 
         st.plotly_chart(fig0)
 
-        df_timeev_jjnos_dis = df_time[['dates', 'country', fuc_of_ty]].groupby(['dates', fuc_of_ty]).nunique().reset_index()
-        fig0a = px.line(df_timeev_jjnos_dis, x='dates', y='country',
+        df_timeev_jjnos_dis = df_time_smooth[['month', 'country', fuc_of_ty]].groupby(['month', fuc_of_ty]).nunique().reset_index()
+        fig0a = px.line(df_timeev_jjnos_dis, x='month', y='country',
                         color=fuc_of_ty,
                         title="Time evolution of JJIF - JJNOs",
                         color_discrete_map=col_sel,
                         labels={
-                                "dates": "Date [year]",
+                                "month": "Date [year]",
                                 "name": "Number of JJNOs"
                                 }
                         )
@@ -1018,7 +1116,7 @@ else:
         x = pg.Figure(data=[data], layout=layout)
         st.plotly_chart(x)
 
-    else:
+    elif mode == 'Countries':
 
         left_column, right_column = st.columns(2)
 
@@ -1053,8 +1151,8 @@ else:
                           title='Gender distribution')
             st.plotly_chart(fig2, use_container_width=True)
 
-        df_timeev = df_time[['dates', 'name', 'cat_type']].groupby(['dates', 'cat_type']).count().reset_index()
-        fig1a = px.line(df_timeev, x='dates', y='name', color='cat_type',
+        df_timeev = df_time_smooth[['month', 'name', 'cat_type']].groupby(['month', 'cat_type']).count().reset_index()
+        fig1a = px.line(df_timeev, x='month', y='name', color='cat_type',
                         title="Time evolution of " + str(countryt_select) + " - Disciplines",
                         color_discrete_map=COLOR_MAP,
                         labels={
@@ -1066,8 +1164,8 @@ else:
         fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
         st.plotly_chart(fig1a)
 
-        df_timeev_age_cat = df_time[['dates', 'name', 'age_division']].groupby(['dates', 'age_division']).count().reset_index()
-        fig1b = px.line(df_timeev_age_cat, x='dates', y='name', color='age_division',
+        df_timeev_age_cat = df_time_smooth[['month', 'name', 'age_division']].groupby(['month', 'age_division']).count().reset_index()
+        fig1b = px.line(df_timeev_age_cat, x='month', y='name', color='age_division',
                         title="Time evolution of " + str(countryt_select) + " - Age Divisions",
                         color_discrete_map=COLOR_MAP_AGE,
                         labels={
@@ -1085,8 +1183,7 @@ else:
                               how='inner')
 
         df_medal = inner_join[['name_y', 'rank', 'name_x']].groupby(['name_y', 'rank']).count().reset_index()
-        # move Liechtenstein back to JJIF
-        df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
+
         fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='name_y', y='name_x',
                       color='rank', text='name_x', title="Medals in Events",
                       labels={
@@ -1098,6 +1195,8 @@ else:
         fig4.update_xaxes(categoryorder='total descending')
         st.plotly_chart(fig4)
 
+    else:
+        st.write("This should never be visible")
 
 st.sidebar.markdown('<a href="mailto:sportdirector@jjif.org">Contact for problems</a>', unsafe_allow_html=True)
 
