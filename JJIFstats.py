@@ -688,10 +688,15 @@ else:
     # create list with monthly steps
     list_month = pd.date_range(start=dstart, end=dend, freq='MS').tolist()
 
+
+    df_total['entryDate'] = pd.to_datetime(df_total['entryDate'])
+    df_total['leavingDate'] = pd.to_datetime(df_total['leavingDate'])
+
     # create empty temporary list
     list_df_new = []
     # adding column name to the respective columns
     for i, val in enumerate(list_month[:-1]):
+        # import pdb; pdb.set_trace()
 
         # make a new df with all names which have start date and end data
         df_month = df_total[(df_total['entryDate'] <= val) & (df_total['leavingDate'] >= list_month[i+1])]
