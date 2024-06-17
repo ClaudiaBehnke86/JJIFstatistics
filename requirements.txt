@@ -4,5 +4,6 @@ plotly
 streamlit
 pycountry_convert
 scipy
-sparse_dot_topn
+cython
+git+https://github.com/ing-bank/sparse_dot_topn.git
 scikit-learn
