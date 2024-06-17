@@ -1,5 +1,5 @@
 numpy
-pandas==1.4.4
+pandas
 plotly
 streamlit>= 1.9.2
 pycountry_convert
