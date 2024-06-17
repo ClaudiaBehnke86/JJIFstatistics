@@ -5,17 +5,16 @@ statistic on JJIF
 Names are mapped using:
 https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e
 force A and B as a CSR matrix.
-
+With sportse_dot_topn updated https://github.com/ing-bank/sparse_dot_topn/tree/master
 
 '''
 
 import datetime as dt
 import os
+import os.path
 import re
 
 import pandas as pd
-import os.path
-
 
 import plotly.express as px
 import plotly.graph_objs as pg
@@ -25,9 +24,7 @@ import numpy as np
 
 # for the name matching
 from sklearn.feature_extraction.text import TfidfVectorizer
-from scipy.sparse import csr_matrix
-import sparse_dot_topn as ct  # Leading Juice for us
-# import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
+from sparse_dot_topn import sp_matmul_topn
 
 
 # the supported age_divisions
@@ -206,38 +203,6 @@ def ngrams(string, n_gr=3):
     return [''.join(ngram_in) for ngram_in in ngrams_in]
 
 
-def awesome_cossim_top(A, B, ntop, lower_bound=0):
-    '''
-    Function from name comparison
-    'https://towardsdatascience.com/surprisingly-effective-way-to-name-matching-in-python-1a67328e670e'
-
-    force A and B as a CSR matrix.
-    If they have already been CSR, there is no overhead'''
-    A = A.tocsr()
-    B = B.tocsr()
-    M, _ = A.shape
-    _, N = B.shape
-
-    idx_dtype = np.int32
-
-    nnz_max = M*ntop
-
-    indptr = np.zeros(M+1, dtype=idx_dtype)
-    indices = np.zeros(nnz_max, dtype=idx_dtype)
-    data = np.zeros(nnz_max, dtype=A.dtype)
-    ct.sparse_dot_topn(
-        M, N, np.asarray(A.indptr, dtype=idx_dtype),
-        np.asarray(A.indices, dtype=idx_dtype),
-        A.data,
-        np.asarray(B.indptr, dtype=idx_dtype),
-        np.asarray(B.indices, dtype=idx_dtype),
-        B.data,
-        ntop,
-        lower_bound,
-        indptr, indices, data)
-    return csr_matrix((data, indices, indptr), shape=(M, N))
-
-
 def get_matches_df(sparse_matrix, name_vector, top=100):
     '''
     Function from name comparison
@@ -381,14 +346,17 @@ for i, val in enumerate(cat_list):
 
     if len(names_types) > 1:
         tf_idf_matrix = vectorizer.fit_transform(names_types)
+        # make sure it works with small categories
         if len(names_types) > 4:
-            matches = awesome_cossim_top(tf_idf_matrix,
-                                         tf_idf_matrix.transpose(),
-                                         10, 0.4)
+            matches = sp_matmul_topn(tf_idf_matrix,
+                                     tf_idf_matrix.transpose(),
+                                     top_n=10, threshold=0.4, sort=True)
+
         else:
-            matches = awesome_cossim_top(tf_idf_matrix,
-                                         tf_idf_matrix.transpose(),
-                                         4, 0.4)
+            matches = sp_matmul_topn(tf_idf_matrix,
+                                     tf_idf_matrix.transpose(),
+                                     top_n=4, threshold=0.4, sort=True)
+
         # store the  matches into new dataframe called matched_df
         matches_df = get_matches_df(matches, names_types, top=200)
         # For removing all exact matches
@@ -400,8 +368,6 @@ for i, val in enumerate(cat_list):
 
         list_df_new.append(df_new)
 
-        # if len(dict_map) > 0:
-        #    print('fixing ' + str(len(dict_map)) + ' issues with names')
 
 # overwrite existing df_ini with events with name issues fixed
 df_ini = pd.concat(list_df_new)
