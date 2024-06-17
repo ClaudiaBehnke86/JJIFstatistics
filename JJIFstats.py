@@ -26,7 +26,8 @@ import numpy as np
 # for the name matching
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import csr_matrix
-import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
+import sparse_dot_topn as ct  # Leading Juice for us
+# import sparse_dot_topn.sparse_dot_topn as ct  # Leading Juice for us
 
 
 # the supported age_divisions
