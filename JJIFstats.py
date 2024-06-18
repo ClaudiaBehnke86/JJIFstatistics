@@ -411,6 +411,23 @@ df_ini['cat_type'] = conv_to_type(df_ini, 'cat_type', DIS_INP)
 df_ini['age_division'] = df_ini['category_name']
 df_ini['age_division'] = conv_to_type(df_ini, 'age_division', AGE_INP)
 
+df_ini['gender'] = df_ini['category_name']
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Men")),
+                         other="Men", inplace=True)
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Women")),
+                         other="Women", inplace=True)
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Mixed")),
+                         other="Mixed", inplace=True)
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Open")),
+                         other="Open", inplace=True)
+# at the moment (6/2024) inclusive self defense is gender open
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Inclusive")),
+                         other="Open", inplace=True)
+# in some kids categories gendered were mixed
+df_ini['gender'].where(~(df_ini['gender'].str.contains("Mix ")),
+                         other="Open", inplace=True)
+
+
 # remove what is not selected
 df_ini = df_ini[df_ini['cat_type'].isin(dis_select)]
 df_ini = df_ini[df_ini['age_division'].isin(age_select)]
@@ -434,6 +451,7 @@ if mode == "Countries":
 # merge the events and start dates
 df_par = df_ini.copy()
 df_par = df_par.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+st.write(df_ini)
 
 df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
 df_min.rename(columns={"startDate": "entryDate"}, inplace=True)
@@ -459,7 +477,7 @@ df_total['gender'].where(~(df_total['gender'].str.contains("Open")),
 df_total['gender'].where(~(df_total['gender'].str.contains("Inclusive")),
                          other="Open", inplace=True)
 # in some kids categories gendered were mixed
-df_total['gender'].where(~(df_total['gender'].str.contains("Mix")),
+df_total['gender'].where(~(df_total['gender'].str.contains("Mix ")),
                          other="Open", inplace=True)
 
 # convert country names to codes and check continents
@@ -835,8 +853,8 @@ elif mode == 'Single Event':
     left_column, right_column = st.columns(2)
     with left_column:
         df_cat = pd.DataFrame()
-        df_cat['cat_type'] = df_ini['cat_type'].value_counts().index
-        df_cat['counts'] = df_ini['cat_type'].value_counts().values
+        df_cat['cat_type'] = df_single_event['cat_type'].value_counts().index
+        df_cat['counts'] = df_single_event['cat_type'].value_counts().values
         fig1 = px.pie(df_cat, values='counts',
                       names='cat_type', color='cat_type',
                       title='Discipline distribution',
@@ -850,13 +868,15 @@ elif mode == 'Single Event':
 
     with right_column:
         df_gender = pd.DataFrame()
-        df_gender['gender'] = df_total['gender'].value_counts().index
-        df_gender['counts'] = df_total['gender'].value_counts().values
+        df_gender['gender'] = df_single_event['gender'].value_counts().index
+        df_gender['counts'] = df_single_event['gender'].value_counts().values
         fig2 = px.pie(df_gender, values='counts', names='gender',
                       color='gender',
                       color_discrete_map={"Women": 'rgb(243, 28, 43)',
                                           "Men": 'rgb(0,144,206)',
-                                          "Mixed": 'rgb(211,211,211)'},
+                                          "Mixed": 'rgb(211,211,211)',
+                                          "Open": 'rgb(105,105,105)'
+                                          },
                       title='Gender distribution')
         st.plotly_chart(fig2, use_container_width=True)
 
