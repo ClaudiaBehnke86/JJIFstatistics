@@ -451,7 +451,6 @@ if mode == "Countries":
 # merge the events and start dates
 df_par = df_ini.copy()
 df_par = df_par.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
-st.write(df_ini)
 
 df_min = df_par[['country', 'name', 'category_name', 'startDate']].groupby(['country', 'name', 'category_name']).min().reset_index()
 df_min.rename(columns={"startDate": "entryDate"}, inplace=True)
