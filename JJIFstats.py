@@ -302,21 +302,23 @@ df_ini['rank'] = df_ini['rank'].astype(int)
 df_ini['category_id'] = df_ini['category_id'].astype(int)
 
 # remove all categories which are not in key map and convert to hr name
-with st.expander("Show unsupported categories", expanded=False):
-    df_excluded = df_ini[~df_ini['category_id'].isin(key_map.keys())]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FRIENDSHIP"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("TEAM"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Team"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R2"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R5"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Final"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FINAL"))]
-    df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("DEMONSTRATION"))]
-    st.write(df_excluded)
-    if len(df_excluded['category_id'].unique()) > 0:
+df_excluded = df_ini[~df_ini['category_id'].isin(key_map.keys())]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FRIENDSHIP"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("TEAM"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Team"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R2"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("R5"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("Final"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("FINAL"))]
+df_excluded = df_excluded[~(df_excluded['category_name'].str.contains("DEMONSTRATION"))]
+
+if len(df_excluded) > 0:
+    with st.expander("Show unsupported categories", expanded=False):
+        st.write(df_excluded)
         st.write("There are : " +
                  str(len(df_excluded['category_id'].unique()))
                  + " categories not included")
+
 df_ini = df_ini[df_ini['category_id'].isin(key_map.keys())]
 df_ini['category_name'] = df_ini['category_id'].replace(key_map)
 
@@ -1034,13 +1036,13 @@ elif mode == 'Countries':
                           on='id',
                           how='inner')
 
-    df_medal = inner_join[['name_y', 'rank', 'name_x']].groupby(['name_y', 'rank']).count().reset_index()
+    df_medal = inner_join[['name', 'rank', 'Name Event']].groupby(['Name Event', 'rank']).count().reset_index()
 
-    fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='name_y', y='name_x',
-                  color='rank', text='name_x', title="Medals in Events",
+    fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='Name Event', y='name',
+                  color='rank', text='Name Event', title="Medals in Events",
                   labels={
-                            "name_x": "Event Name",
-                            "name_y": "Number of Medals",
+                            "name Event": "Event Name",
+                            "name": "Number of Medals",
                             "rank": "Place"
                             }
                   )
