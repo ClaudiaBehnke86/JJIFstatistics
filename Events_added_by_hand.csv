@@ -1,6 +1,6 @@
 id,country_code,name,eventtype,startDate
 WCh1996,FRA,World Championship 1996 (Medals Only),World Championship,1996-11-23
-TWG1997,FIN,The World Games 1997,World Games / Combat Games,1997-08-07
+TWG1997,FIN,The World Games 1997 (Medals Only),World Games / Combat Games,1997-08-07
 WCh1998,GER,World Championship 1998 (Medals only),World Championship,1998-11-21
 WCh2000,DEN,World Championship 2000 (Medals only) Copenhagen,World Championship,2000-11-25
 ECH2001,ITA,European Championship Genua/Italy 2001 (Medals Only),Continental Championship,2001-05-01
@@ -21,20 +21,30 @@ ASCH2006,KAZ,Asian Championship in Almaty,Continental Championship,2006-11-06
 ECH2007,ITA,European Championship 2007 (Medals Only) Tourino ,Continental Championship,2007-06-01
 YWCh2007,GER,U21 & U18 World Championship,World Championship,2007-10-04
 GO2007,GER,German Open 2007,A Class Tournament,2007-10-06
+MAOp2008,SLO,Maribor Open 2008 (Medals Only Date unknown),A Class Tournament,2008-06-01
+EOC2008,BEL,European Open Cup 2008 (Medals Only Date unknown),A Class Tournament,2008-11-01
 YECH2008,SLO,European Championship Junior and Aspirant Maribor 2008,Continental Championship,2008-05-01
 GO2008,GER,German Open 2008 (only Fighting),A Class Tournament,2008-10-04
 WCh2008,SWE,World Championship 2008,World Championship,2008-11-26
 ECh2009,MNE,European Championship 2009,Continental Championship,2009-06-04
 TWG2009,TPE,The World Games 2009,World Games / Combat Games,2009-07-21
 PanAm2009,COL,PanAmerican Championship 2009,Continental Championship,2009-09-04
+POp2009,FRA,Paris Open 2009 (Medals Only),A Class Tournament,2009-04-01
 YWCH2009,GRE,World Championship for Juniors and Aspirants in Athens/ Greece,World Championship,2009-11-27
 ACh2010,TUN,African Championship 2010,Continental Championship,2010-03-20
+MAOp2010,SLO,Maribor Open 2010 (Medals Only Date unknown),A Class Tournament,2010-06-01
+ECIT2010,ITA,European Cup Italy 2010 (Medals Only Date Unknown),A Class Tournament,2010-06-01
+EOC2010,BEL,European Cup 2010 (Medals Only),A Class Tournament,2010-10-30
+POp2010,FRA,Paris Open 2010 (Medals Only),A Class Tournament,2010-04-01
 YECH2010,AUT,European Championship 2010 - Vienna (Juniors/Aspirants),Continental Championship,2010-05-28
 CG2010,CHN,Sportaccord Combat Games 2010 Ju-Jitsu Beijing,World Games / Combat Games,2010-08-18
 BAO2010,SRB,7th JU-JITSU BALKAN CHAMPIONSHIP,A Class Tournament,2010-09-24
 GO2010,GER,German Open 2010,A Class Tournament,2010-10-03
-WCh2010,RUS,World Championship 2011,World Championship,2010-11-26
+WCh2010,RUS,World Championship 2010,World Championship,2010-11-26
+MedO2011,ESP,Mediteranian Open 2011 (Spain? Date unknown),A Class Tournament,2011-01-01
+PanO2011,ARG,Pan-American Championship 2011,Continental Championship,2011-05-21
 ECh2011,SLO,European Championships 2011 Maribor Slovenia,Continental Championship,2011-06-03
+POp2011,FRA,Paris Open 2011 (Medals only),A Class Tournament,2011-04-01
 BO2011,ROU,8th Balkan Open Championship 2011,B Class Tournament,2011-09-25
 GO2011,GER,German Open 2011,A Class Tournament,2011-10-01
 WCh2011,COL,World Championship 2011,World Championship,2011-10-14
@@ -51,7 +61,7 @@ GO2013,GER,German Open 2013 - Hohenmolsen,A Class Tournament,2013-10-07
 CG2013,RUS,Sportaccord World Combat Games - St. Petersburg/ Russia,World Games / Combat Games,2013-10-24
 WE2013,BEL,Western European Championship,B Class Tournament,2013-11-02
 YWCH2013,ROU,Youth World Championships 2013,World Championship,2013-11-22
-POp2014,FRA,Grand Slam Paris Open,A Class Tournament,2014-05-02
+POp2014,FRA,Paris Open 2014,A Class Tournament,2014-05-02
 YECH2014,SWE,JJEU Junior & Aspirants European Championships (Lund/SWE),Continental Championship,2014-05-24
 Pam2014,CUB,Ju Jitsu Pan American Championship Havana 2014,Continental Championship,2014-05-30
 EOC2014,ROU,European Open Cup,B Class Tournament,2014-06-14

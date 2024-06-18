@@ -26,6 +26,19 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sparse_dot_topn import sp_matmul_topn
 
+# some style for the page
+st.set_page_config(
+    page_title="JJIF Statistics",
+    page_icon="https://i0.wp.com/jjeu.eu/wp-content/uploads/2018/08/jjif-logo-170.png?fit=222%2C160&ssl=1",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        'Get Help': 'mailto:sportdirector@jjif.org',
+        'Report a bug': "https://github.com/ClaudiaBehnke86/JJIFseeding",
+        'About': "# JJIF statistics."
+    }
+)
+
 
 # the supported age_divisions
 AGE_INP = ["U16", "U18", "U21", "Adults", "U14", "U12", "U10", "U15", "Master"]
@@ -133,13 +146,19 @@ def data_setting():
                                             EVENT_TYPE_INP,
                                             EVENT_TYPE_SEL)
 
+    with st.sidebar.expander("Acknowledgements"):
+        st.success('Thanks to the Data contributors:  \n Geert Assmann  \n Nicolas \'Niggi\' Baez  \n The DJJV team \n SPortdata', icon="✅")
+
     return age_select_in, dis_select_in, cont_select_in, dstart_in, \
         dend_in, evtt_select_in, mode_in, para_in
 
 
 @st.cache_data
 def read_in_ini_csv(user1, password1, data_url):
+    ''' Read in the initial files
+     Reads in a csv  and the event csv
 
+    '''
 
     with st.spinner('Wait for it...'):
         db_string = "curl -u " + user1 + ":" + password1 + \
@@ -237,10 +256,6 @@ def get_matches_df(sparse_matrix, name_vector, top=100):
 # Main program starts here
 st.header('JJIF statistic')
 
-with st.expander("Thanks to"):
-    st.success('The Data contributors: \n Geert Assmann \n Nicolas \'Niggi\' Baez', icon="✅")
-
-
 IOC_ISO = read_in_iso()
 key_map = read_in_catkey()
 age_select, dis_select, cont_select, dstart, dend, evtt, mode, para_inp = data_setting()
@@ -251,28 +266,11 @@ if mode == "Multisportgames":
 
 df_ini, df_evts = read_in_ini_csv(st.secrets['user1'], st.secrets['password1'], st.secrets['url'])
 
-if mode == "Multisportgames":
-    evtt = "World Games / Combat Games"
-    ms_list = df_evts['id'][df_evts['eventtype'] == evtt].unique().tolist()
-
-if dstart < dt.date(2003, 1, 1):
-    st.warning("Old data only contains medals and not total results",  icon="⚠️")
-
-evt_sel = df_evts['name'].unique()
-if mode == 'Single Event':
-    evtt_select = st.selectbox("Select the event:",
-                               evt_sel)
-    select_id = df_evts['id'][df_evts['name'] == evtt_select].iloc[0]
-else:
-    with st.expander("Details of events"):
-        if mode == "Multisportgames":
-            st.write(df_evts[df_evts['eventtype'] == evtt])
-        else:
-            st.write(df_evts)
-
-
 # make sure that start date is converted back to a date
 df_evts['startDate'] = pd.to_datetime(df_evts['startDate'])
+
+# rename name columns for events to avoid mismatch with ini names
+df_evts = df_evts.rename(columns={"name": "Name Event"})
 
 # cleanup of df
 df_ini['name'] = df_ini['name'].apply(lambda x: x.upper())
@@ -460,6 +458,9 @@ df_total['gender'].where(~(df_total['gender'].str.contains("Open")),
 # at the moment (6/2024) inclusive self defense is gender open
 df_total['gender'].where(~(df_total['gender'].str.contains("Inclusive")),
                          other="Open", inplace=True)
+# in some kids categories gendered were mixed
+df_total['gender'].where(~(df_total['gender'].str.contains("Mix")),
+                         other="Open", inplace=True)
 
 # convert country names to codes and check continents
 df_total['country_code'] = df_total['country'].apply(lambda x: pc.country_name_to_country_alpha2(x))
@@ -502,6 +503,26 @@ df_evt_part = df_ini[['id', 'name']].groupby(['id']).count().reset_index()
 df_evt_part = df_evt_part.rename(columns={'name': 'no participants'})
 df_evts = pd.merge(df_evts, df_evt_part, on='id', how='outer')
 
+# some overview selection
+if mode == "Multisportgames":
+    evtt = "World Games / Combat Games"
+    ms_list = df_evts['id'][df_evts['eventtype'] == evtt].unique().tolist()
+
+if dstart < dt.date(2003, 1, 1):
+    st.warning("Old data only contains medals and not total results",  icon="⚠️")
+
+evt_sel = df_evts['Name Event'].unique()
+if mode == 'Single Event':
+    evtt_select = st.selectbox("Select the event:",
+                               evt_sel)
+    select_id = df_evts['id'][df_evts['Name Event'] == evtt_select].iloc[0]
+else:
+    with st.expander("Details of events"):
+        if mode == "Multisportgames":
+            st.write(df_evts[df_evts['eventtype'] == evtt])
+        else:
+            st.write(df_evts)
+
 # start graphics here
 if mode == 'Events Overview & Animations':
 
@@ -509,11 +530,10 @@ if mode == 'Events Overview & Animations':
     df_evts['country_code'] = df_evts['country_code'].apply(lambda x: pc.country_alpha2_to_country_name(x))
     df_evts['country_code'] = df_evts['country_code'].apply(lambda x: pc.country_name_to_country_alpha3(x))
 
-    st.write(df_evts)
 
-    df_dip_evts = df_evts[['name', 'startDate', 'no participants','eventtype','country_code']]
+    df_dip_evts = df_evts[['Name Event', 'startDate', 'no participants', 'eventtype', 'country_code']]
     fig1 = px.bar(df_dip_evts, x='startDate', y='no participants', color='eventtype',
-                   hover_data=['startDate', 'name', 'no participants','country_code'],
+                   hover_data=['startDate', 'Name Event', 'no participants','country_code'],
                    title="Events per year",
                    color_discrete_map=COLOR_MAP_ETYPE,
                    labels={
@@ -615,7 +635,7 @@ if mode == 'Events Overview & Animations':
 
     figan1.update_yaxes(visible=False)
     figan1.update_yaxes(categoryorder='total descending')
-    figan.update_yaxes(range=(-.5, 9.5))
+    figan1.update_yaxes(range=(-.5, 9.5))
     st.plotly_chart(figan1)
 
 elif mode == 'History':
@@ -643,7 +663,7 @@ elif mode == 'History':
                             "name": "Number of Athletes"
                             }
                    )
-    fig1.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+    fig1.update_layout(xaxis_range=[dstart, dend])
     st.plotly_chart(fig1)
 
     st.write("In total ", len(df_total), "Athletes")
@@ -667,7 +687,7 @@ elif mode == 'History':
                    labels={"month": "Date [year]",
                            "name": "Number of JJNOs"}
                    )
-    fig0.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+    fig0.update_layout(xaxis_range=[dstart, dend])
     st.write("In total ", len(df_total['country'].unique()), "JJNOs")
     df_jjnocur = df_total[df_total['leavingDate'] > pd.Timestamp(dt.date.today())]
     st.write("Currently", len(df_jjnocur['country'].unique()), "JJNOs active")
@@ -684,7 +704,7 @@ elif mode == 'History':
                             "name": "Number of JJNOs"
                             }
                     )
-    fig0a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+    fig0a.update_layout(xaxis_range=[dstart, dend])
     st.plotly_chart(fig0a)
 
     current_cat = st.checkbox('Show only currently active athletes',
@@ -882,10 +902,11 @@ elif mode == 'Multisportgames':
 
     st.write("In total ", len(df_ms['name'].unique()), "Athletes from",
              len(df_ms['country'].unique()), "JJNOs")
-    df_evts_plot = df_ms [['id', 'name', fuc_of_ty]].groupby(['id', fuc_of_ty]).count().reset_index()
-    df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate']].set_index('id'), on='id')
+
+    df_evts_plot = df_ms[['id', 'name', fuc_of_ty]].groupby(['id', fuc_of_ty]).count().reset_index()
+    df_evts_plot = df_evts_plot.join(df_evts[['id', 'startDate', 'Name Event']].set_index('id'), on='id')
     fig3 = px.bar(df_evts_plot, x="startDate", y='name', color=fuc_of_ty,
-                  color_discrete_map=col_sel,
+                  color_discrete_map=col_sel, text='Name Event',
                   labels={
                           "startDate": "Year of the Games",
                           "name": "Number of Athletes"
@@ -973,7 +994,7 @@ elif mode == 'Countries':
                             "cat_type": "Discipline"
                             }
                     )
-    fig1a.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+    fig1a.update_layout(xaxis_range=[dstart, dend])
     st.plotly_chart(fig1a)
 
     df_timeev_age_cat = df_time_smooth[['month', 'name', 'age_division']].groupby(['month', 'age_division']).count().reset_index()
@@ -986,7 +1007,7 @@ elif mode == 'Countries':
                             "age_division": "Age Division"
                             }
                     )
-    fig1b.update_layout(xaxis_range=[df_total['entryDate'].min(), dend])
+    fig1b.update_layout(xaxis_range=[dstart, dend])
     st.plotly_chart(fig1b)
 
     inner_join = pd.merge(df_ini,
