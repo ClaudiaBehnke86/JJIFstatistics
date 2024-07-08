@@ -130,17 +130,3 @@ fig3 = px.bar(df_age_dis, x="age_division", y="name",
                      }
               )
 st.plotly_chart(fig3)
-
-df_medal = df_par[['country', 'rank', 'name']].groupby(['country', 'rank']).count().reset_index()
-# move Liechtenstein back to JJIF
-df_medal['country'].replace("Liechtenstein", "JJIF", regex=True, inplace=True)
-
-fig4 = px.bar(df_medal[df_medal['rank'] < 4], x='country', y='name',
-              color='rank', text='name', title="Medals",
-              labels={
-             "country": "Country code",
-             "name": "Number of Medals",
-             "rank": "Place"
-             })
-fig4.update_xaxes(categoryorder='total descending')
-st.plotly_chart(fig4)
