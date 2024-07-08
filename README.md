@@ -26,7 +26,7 @@ pip install -r requirements.txt
 To start the Streamlit application, run the following command:
 
 ```bash
-streamlit run JJIFstats.py
+streamlit run 1_🏠_MainPage.py
 ```
 
 ## Configuration
