@@ -577,6 +577,9 @@ df_evt_part = df_ini[['id', 'name']].groupby(['id']).count().reset_index()
 df_evt_part = df_evt_part.rename(columns={'name': 'Number of Participants'})
 df_evts = pd.merge(df_evts, df_evt_part, on='id', how='outer')
 
+#sort events in descending order
+df_evts.sort_values(by="startDate", ascending = False, inplace = True)
+
 # Check if you've already initialized the data & store files in session state
 if 'df_evts' not in st.session_state:
     # df that contains data of the events
