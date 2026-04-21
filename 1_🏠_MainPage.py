@@ -457,6 +457,7 @@ df_ini["country_code"].replace("ENG", "GBR", regex=True, inplace=True)
 # convert IOC codes to ISO codes using a dict
 df_ini['country_code'] = df_ini['country_code'].replace(IOC_ISO)
 
+st.write(df_ini)
 # set the continent
 df_ini['continent'] = df_ini['country_code'].apply(
             lambda x: pc.country_alpha2_to_continent_code(x))
